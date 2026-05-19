@@ -460,10 +460,37 @@ function ReferralsView({ referrals, participants }: { referrals: Referral[]; par
 
 function WinnersView({ winners }: { winners: Winner[] }) {
   if (winners.length === 0) {
-    return <div className="glass rounded-2xl p-10 text-center text-muted-foreground">No winners drawn yet.</div>;
+    return (
+      <div className="glass-strong rounded-2xl p-10 text-center">
+        <Trophy className="mx-auto h-8 w-8 text-mustard mb-2" />
+        <div className="font-semibold text-caley-navy">No winners drawn yet</div>
+        <p className="text-sm text-muted-foreground mt-1">Head to the Giveaway Wheel to draw your first winner.</p>
+      </div>
+    );
   }
   return (
-    <div className="glass rounded-2xl overflow-hidden">
+    <div className="space-y-3">
+      {/* Mobile cards */}
+      <div className="grid gap-3 sm:hidden">
+        {winners.map((w) => (
+          <div key={w.id} className="glass-strong rounded-2xl p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Draw #{w.drawOrder}</div>
+                <div className="font-bold text-caley-navy">{w.winnerName}</div>
+                <div className="text-xs text-muted-foreground">{formatPhone(w.winnerPhone)}</div>
+              </div>
+              <Badge className="bg-warm-orange text-white">{w.ticketNumber}</Badge>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-xs">
+              <span className="font-semibold text-caley-navy">{w.prizeLabel}</span>
+              <span className="text-muted-foreground">{new Date(w.drawnAt).toLocaleString()}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Desktop table */}
+      <div className="hidden sm:block glass-strong rounded-2xl overflow-hidden">
       <table className="w-full text-sm">
         <thead className="bg-white/50 text-left">
           <tr>
