@@ -93,19 +93,25 @@ export function LeadForm() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.1 }}
       onSubmit={onSubmit}
-      className="glass rounded-3xl p-5 sm:p-7 shadow-soft"
+      className="glass-strong rounded-3xl p-5 sm:p-7 shadow-glow ring-1 ring-caley-blue/10"
       noValidate
     >
-      <div className="mb-5 flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-caley-blue">
-          Paso 1 de 2 — Registro
-        </span>
-        <ShieldCheck className="h-4 w-4 text-caley-blue" />
+      <div className="mb-5 flex items-center justify-between border-b border-border/60 pb-4">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl gradient-brand text-white shadow-soft">
+            <ShieldCheck className="h-4 w-4" />
+          </span>
+          <div className="leading-tight">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-caley-blue">Paso 1 de 2</div>
+            <div className="text-sm font-bold text-caley-navy">Registro</div>
+          </div>
+        </div>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Seguro · Rápido</span>
       </div>
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="fullName">Nombre completo</Label>
+          <Label htmlFor="fullName" className="text-caley-navy font-semibold">Nombre completo</Label>
           <Input
             id="fullName"
             value={fullName}
@@ -120,7 +126,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label htmlFor="phone">Teléfono</Label>
+          <Label htmlFor="phone" className="text-caley-navy font-semibold">Teléfono</Label>
           <Input
             id="phone"
             inputMode="tel"
@@ -136,7 +142,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label htmlFor="email">Correo electrónico</Label>
+          <Label htmlFor="email" className="text-caley-navy font-semibold">Correo electrónico</Label>
           <Input
             id="email"
             type="email"
@@ -152,7 +158,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label>Seguros de interés</Label>
+          <Label className="text-caley-navy font-semibold">Seguros de interés</Label>
           <div className="mt-2 flex flex-wrap gap-2">
             {INTEREST_OPTIONS.map((i) => (
               <InterestChip
@@ -168,13 +174,13 @@ export function LeadForm() {
           )}
         </div>
 
-        <label className="flex items-start gap-3 rounded-xl bg-white/60 p-3 cursor-pointer">
+        <label className="flex items-start gap-3 rounded-xl border border-border bg-caley-ice/40 p-3 cursor-pointer hover:border-caley-blue/40 transition-colors">
           <Checkbox
             checked={consent}
             onCheckedChange={(v) => setConsent(v === true)}
             className="mt-0.5"
           />
-          <span className="text-xs text-foreground/80">
+          <span className="text-xs text-foreground/85 leading-relaxed">
             Acepto que Caley Insurance me pueda contactar sobre opciones de
             seguro relacionadas con mis intereses.
           </span>
@@ -186,7 +192,7 @@ export function LeadForm() {
         <Button
           type="submit"
           disabled={!isValid || submitting}
-          className="h-12 w-full text-base gradient-brand text-white shadow-soft hover:opacity-95"
+          className="h-12 w-full text-base font-semibold gradient-brand text-white shadow-glow hover:shadow-[0_18px_40px_-12px_var(--caley-blue)] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none"
         >
           {submitting ? (
             <>
@@ -197,7 +203,7 @@ export function LeadForm() {
           )}
         </Button>
 
-        <p className="text-center text-[11px] text-muted-foreground">
+        <p className="text-center text-[11px] text-muted-foreground/80">
           No purchase required. Insurance purchase does not increase chances of winning.
         </p>
       </div>
