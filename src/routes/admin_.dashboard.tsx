@@ -91,46 +91,57 @@ function AdminDashboard() {
   return (
     <AdminLayout>
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="w-full overflow-x-auto justify-start sm:justify-center flex-nowrap">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="participants">Participants</TabsTrigger>
-          <TabsTrigger value="referrals">Referrals</TabsTrigger>
-          <TabsTrigger value="wheel">Giveaway Wheel</TabsTrigger>
-          <TabsTrigger value="winners">Winners</TabsTrigger>
-          <TabsTrigger value="export">Export</TabsTrigger>
-        </TabsList>
+        <div className="-mx-3 sm:mx-0 overflow-x-auto scrollbar-none">
+          <TabsList className="mx-3 sm:mx-0 w-max sm:w-full sm:justify-center flex-nowrap gap-1 bg-white/70 backdrop-blur-md border border-caley-navy/10 shadow-soft">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Overview</TabsTrigger>
+            <TabsTrigger value="participants" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Participants</TabsTrigger>
+            <TabsTrigger value="referrals" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Referrals</TabsTrigger>
+            <TabsTrigger value="wheel" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Giveaway Wheel</TabsTrigger>
+            <TabsTrigger value="winners" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Winners</TabsTrigger>
+            <TabsTrigger value="export" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Export</TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* OVERVIEW */}
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <KpiCard label="Participants" value={participants.length} icon={Users} tint="blue" />
-            <KpiCard label="Referrals" value={referrals.length} icon={UserPlus} tint="orange" />
-            <KpiCard label="Giveaway entries" value={entries.length} icon={Sparkles} tint="yellow" />
-            <KpiCard label="Tickets generated" value={entries.length} icon={Ticket} tint="red" />
-            <KpiCard label="Winners" value={winners.length} icon={Trophy} tint="green" />
-            <KpiCard label={`Top: ${topInterest.label}`} value={topInterest.count} icon={Sparkles} tint="blue" />
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {INTEREST_OPTIONS.map((i) => (
-              <KpiCard key={i} label={i} value={interestCounts.get(i) ?? 0} icon={Users} tint="blue" />
-            ))}
-          </div>
+          <section className="space-y-3">
+            <SectionHeading title="Event Overview" subtitle="Live counts across the Caley Hot Dog Event" />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              <KpiCard label="Participants" value={participants.length} icon={Users} tint="blue" />
+              <KpiCard label="Referrals" value={referrals.length} icon={UserPlus} tint="orange" />
+              <KpiCard label="Giveaway entries" value={entries.length} icon={Sparkles} tint="yellow" />
+              <KpiCard label="Tickets generated" value={entries.length} icon={Ticket} tint="red" />
+              <KpiCard label="Winners" value={winners.length} icon={Trophy} tint="green" />
+              <KpiCard label={`Top: ${topInterest.label}`} value={topInterest.count} icon={Sparkles} tint="blue" />
+            </div>
+          </section>
 
-          <div className="grid lg:grid-cols-2 gap-4">
+          <section className="space-y-3">
+            <SectionHeading title="Lead Interest Breakdown" subtitle="Distribution across lines of business" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {INTEREST_OPTIONS.map((i) => (
+                <InterestStatCard key={i} label={i} value={interestCounts.get(i) ?? 0} total={participants.length} />
+              ))}
+            </div>
+          </section>
+
+          <section className="grid lg:grid-cols-2 gap-4">
             <RecentList title="Recent registrations" items={participants.slice(0, 5).map((p) => ({
               primary: p.fullName,
               secondary: `${formatPhone(p.phone)} · ${p.interests.join(", ")}`,
               time: p.createdAt,
-            }))} empty="No participants yet. Once people scan the QR, they will appear here." />
+              badge: p.ticketNumber,
+            }))} empty="No participants yet. Once people scan the QR, they will appear here." emptyIcon={Users} />
             <RecentList title="Recent giveaway entries" items={entries.slice(0, 5).map((e) => {
               const p = participants.find((x) => x.id === e.participantId);
               return {
                 primary: e.ticketNumber,
                 secondary: p?.fullName ?? "—",
                 time: e.createdAt,
+                badge: "Ticket",
               };
-            })} empty="No giveaway entries yet." />
-          </div>
+            })} empty="No giveaway entries yet." emptyIcon={Ticket} />
+          </section>
 
           <div className="flex flex-wrap gap-2 justify-end">
             <Button variant="outline" onClick={async () => { await localEventAdapter.seedDemo(); await refresh(); toast.success("Demo data seeded"); }}>
@@ -178,29 +189,67 @@ function AdminDashboard() {
   );
 }
 
+function SectionHeading({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="flex items-end justify-between gap-2">
+      <div>
+        <h2 className="text-base sm:text-lg font-bold text-caley-navy leading-tight">{title}</h2>
+        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+      </div>
+    </div>
+  );
+}
+
+function InterestStatCard({ label, value, total }: { label: string; value: number; total: number }) {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  return (
+    <div className="glass-strong rounded-2xl p-3.5">
+      <div className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">{label}</div>
+      <div className="mt-1 flex items-baseline justify-between">
+        <div className="text-2xl font-black text-caley-navy tabular-nums">{value}</div>
+        <div className="text-[11px] font-semibold text-caley-blue">{pct}%</div>
+      </div>
+      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-caley-navy/8">
+        <div className="h-full rounded-full bg-gradient-to-r from-caley-navy to-caley-blue transition-all" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
 function RecentList({
   title,
   items,
   empty,
+  emptyIcon: EmptyIcon,
 }: {
   title: string;
-  items: { primary: string; secondary: string; time: string }[];
+  items: { primary: string; secondary: string; time: string; badge?: string }[];
   empty: string;
+  emptyIcon?: typeof Users;
 }) {
   return (
-    <div className="glass rounded-2xl p-4">
-      <h3 className="font-semibold mb-3">{title}</h3>
+    <div className="glass-strong rounded-2xl p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="font-bold text-caley-navy">{title}</h3>
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Last {items.length || 5}</span>
+      </div>
       {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{empty}</p>
+        <div className="py-8 text-center">
+          {EmptyIcon && <EmptyIcon className="mx-auto h-8 w-8 text-caley-blue/40 mb-2" />}
+          <p className="text-sm text-muted-foreground">{empty}</p>
+        </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="divide-y divide-border/60">
           {items.map((it, i) => (
-            <li key={i} className="flex justify-between items-center text-sm border-b border-border/50 pb-2 last:border-0">
-              <div>
-                <div className="font-medium">{it.primary}</div>
-                <div className="text-xs text-muted-foreground">{it.secondary}</div>
+            <li key={i} className="flex justify-between items-center gap-3 text-sm py-2.5 first:pt-0 last:pb-0">
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-caley-navy truncate">{it.primary}</div>
+                <div className="text-xs text-muted-foreground truncate">{it.secondary}</div>
               </div>
-              <div className="text-xs text-muted-foreground">{new Date(it.time).toLocaleTimeString()}</div>
+              <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                {it.badge && <Badge variant="secondary" className="text-[10px]">{it.badge}</Badge>}
+                <div className="text-[11px] text-muted-foreground tabular-nums">{new Date(it.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+              </div>
             </li>
           ))}
         </ul>
