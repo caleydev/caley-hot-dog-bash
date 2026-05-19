@@ -17,10 +17,10 @@ export function InterestChip({
       whileTap={{ scale: 0.95 }}
       onClick={onToggle}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all",
+        "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all",
         selected
-          ? "gradient-brand text-white border-transparent shadow-soft"
-          : "bg-white/70 text-foreground border-border hover:border-caley-blue",
+          ? "gradient-brand text-white border-transparent shadow-[0_6px_18px_-8px_var(--caley-blue)]"
+          : "bg-white text-foreground border-border hover:border-caley-blue hover:text-caley-navy",
       )}
       aria-pressed={selected}
     >

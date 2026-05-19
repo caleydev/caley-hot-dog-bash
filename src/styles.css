@@ -64,41 +64,53 @@
 :root {
   --radius: 0.625rem;
   --radius: 1rem;
-  /* Caley brand */
-  --caley-navy: oklch(0.27 0.08 260);
-  --caley-blue: oklch(0.62 0.17 245);
-  --caley-sky: oklch(0.92 0.04 240);
-  --hotdog-red: oklch(0.62 0.21 25);
-  --mustard: oklch(0.82 0.16 90);
-  --warm-orange: oklch(0.74 0.17 55);
-  --success: oklch(0.65 0.17 150);
+  /* Caley brand — premium event palette */
+  --caley-navy: oklch(0.24 0.07 252);       /* #0B2A4A */
+  --caley-blue: oklch(0.52 0.15 245);       /* #0A6FB8 */
+  --caley-sky: oklch(0.78 0.12 230);        /* #4FC3F7 */
+  --caley-ice: oklch(0.97 0.02 230);        /* #EAF8FF */
+  --hotdog-red: oklch(0.66 0.20 32);        /* #F45B3F coral */
+  --mustard: oklch(0.80 0.15 80);           /* #F6B739 */
+  --warm-orange: oklch(0.72 0.17 50);
+  --cream: oklch(0.97 0.04 95);             /* #FFF6DC */
+  --success: oklch(0.62 0.15 150);
 
-  --background: oklch(0.99 0.01 240);
-  --foreground: oklch(0.22 0.06 260);
+  --background: oklch(0.98 0.015 230);
+  --foreground: oklch(0.22 0.05 255);       /* #102033 */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.06 260);
+  --card-foreground: oklch(0.22 0.05 255);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.06 260);
+  --popover-foreground: oklch(0.22 0.05 255);
   --primary: var(--caley-navy);
   --primary-foreground: oklch(0.99 0.01 240);
-  --secondary: var(--caley-sky);
+  --secondary: var(--caley-ice);
   --secondary-foreground: var(--caley-navy);
-  --muted: oklch(0.96 0.02 240);
-  --muted-foreground: oklch(0.5 0.04 260);
+  --muted: oklch(0.96 0.015 230);
+  --muted-foreground: oklch(0.50 0.03 250); /* #5B6B7C */
   --accent: var(--caley-blue);
   --accent-foreground: oklch(1 0 0);
   --destructive: var(--hotdog-red);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.9 0.02 240);
-  --input: oklch(0.93 0.02 240);
+  --border: oklch(0.91 0.02 235);
+  --input: oklch(0.93 0.02 235);
   --ring: var(--caley-blue);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.98 0.02 240) 0%, oklch(0.94 0.05 235) 50%, oklch(0.97 0.03 250) 100%);
-  --gradient-brand: linear-gradient(135deg, var(--caley-navy), var(--caley-blue));
-  --gradient-warm: linear-gradient(135deg, var(--hotdog-red), var(--warm-orange) 60%, var(--mustard));
-  --shadow-soft: 0 10px 40px -10px color-mix(in oklab, var(--caley-blue) 25%, transparent);
-  --shadow-glow: 0 0 60px -10px color-mix(in oklab, var(--caley-blue) 40%, transparent);
-  --shadow-warm: 0 10px 40px -10px color-mix(in oklab, var(--warm-orange) 35%, transparent);
+  /* Layered mesh-style hero background: navy/blue at top, cream/ice near form */
+  --gradient-hero:
+    radial-gradient(1100px 600px at 8% -10%, color-mix(in oklab, var(--caley-navy) 22%, transparent) 0%, transparent 60%),
+    radial-gradient(900px 520px at 100% 0%, color-mix(in oklab, var(--caley-blue) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(700px 500px at 50% 100%, color-mix(in oklab, var(--cream) 70%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--caley-ice) 0%, oklch(0.99 0.008 230) 60%, oklch(1 0 0) 100%);
+  --gradient-brand: linear-gradient(135deg, var(--caley-navy) 0%, var(--caley-blue) 100%);
+  --gradient-warm: linear-gradient(135deg, var(--hotdog-red) 0%, var(--mustard) 100%);
+  --gradient-admin:
+    radial-gradient(900px 500px at 0% 0%, color-mix(in oklab, var(--caley-navy) 14%, transparent), transparent 60%),
+    radial-gradient(700px 400px at 100% 10%, color-mix(in oklab, var(--caley-sky) 22%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--caley-ice) 0%, oklch(0.99 0.008 230) 100%);
+  --shadow-soft: 0 8px 24px -10px color-mix(in oklab, var(--caley-navy) 28%, transparent), 0 2px 6px -2px color-mix(in oklab, var(--caley-navy) 12%, transparent);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--caley-blue) 18%, transparent), 0 16px 48px -16px color-mix(in oklab, var(--caley-blue) 40%, transparent);
+  --shadow-warm: 0 14px 40px -16px color-mix(in oklab, var(--hotdog-red) 45%, transparent);
+  --shadow-card: 0 1px 0 0 color-mix(in oklab, white 80%, transparent) inset, 0 12px 32px -16px color-mix(in oklab, var(--caley-navy) 30%, transparent), 0 2px 4px -2px color-mix(in oklab, var(--caley-navy) 10%, transparent);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -167,25 +179,35 @@
   --color-caley-navy: var(--caley-navy);
   --color-caley-blue: var(--caley-blue);
   --color-caley-sky: var(--caley-sky);
+  --color-caley-ice: var(--caley-ice);
   --color-hotdog-red: var(--hotdog-red);
   --color-mustard: var(--mustard);
   --color-warm-orange: var(--warm-orange);
+  --color-cream: var(--cream);
   --color-success: var(--success);
 }
 
 @layer utilities {
   .glass {
-    background: color-mix(in oklab, white 70%, transparent);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid color-mix(in oklab, white 60%, transparent);
-    box-shadow: var(--shadow-soft);
+    background: color-mix(in oklab, white 82%, transparent);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 1px solid color-mix(in oklab, white 70%, transparent);
+    box-shadow: var(--shadow-card);
+  }
+  .glass-strong {
+    background: color-mix(in oklab, white 92%, transparent);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid color-mix(in oklab, var(--caley-blue) 12%, white 70%);
+    box-shadow: var(--shadow-card);
   }
   .glass-dark {
     background: color-mix(in oklab, var(--caley-navy) 85%, transparent);
     backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid color-mix(in oklab, white 15%, transparent);
   }
+  .bg-admin { background: var(--gradient-admin); background-attachment: fixed; }
   .gradient-brand { background: var(--gradient-brand); }
   .gradient-warm { background: var(--gradient-warm); }
   .text-gradient-brand {
@@ -203,6 +225,18 @@
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .shadow-warm { box-shadow: var(--shadow-warm); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .input-premium {
+    background: white;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 0 0 color-mix(in oklab, var(--caley-navy) 6%, transparent), 0 1px 2px -1px color-mix(in oklab, var(--caley-navy) 8%, transparent);
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .input-premium:focus, .input-premium:focus-visible {
+    outline: none;
+    border-color: color-mix(in oklab, var(--caley-blue) 70%, white);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--caley-blue) 18%, transparent);
+  }
   .ticket-shine {
     position: relative;
     overflow: hidden;
