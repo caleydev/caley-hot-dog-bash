@@ -191,9 +191,11 @@ export function WinnerWheel({
                       <div
                         className="absolute left-1/2 -translate-x-1/2"
                         style={{
-                          top: flipped ? "auto" : "10%",
-                          bottom: flipped ? "10%" : "auto",
-                          transform: flipped ? "translateX(-50%) rotate(180deg)" : "translateX(-50%)",
+                          top: "10%",
+                          transform: flipped
+                            ? "translateX(-50%) rotate(180deg)"
+                            : "translateX(-50%)",
+                          transformOrigin: "center",
                           color: palette.text === "white" ? "#fff" : "#0B2A4A",
                           textShadow: palette.text === "white" ? "0 1px 2px rgba(0,0,0,0.35)" : "none",
                           textAlign: "center",
