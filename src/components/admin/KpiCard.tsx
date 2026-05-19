@@ -13,26 +13,34 @@ export function KpiCard({
   tint?: "blue" | "orange" | "red" | "yellow" | "green";
 }) {
   const tints: Record<string, string> = {
-    blue: "from-caley-blue/15 to-caley-blue/5 text-caley-blue",
-    orange: "from-warm-orange/15 to-warm-orange/5 text-warm-orange",
-    red: "from-hotdog-red/15 to-hotdog-red/5 text-hotdog-red",
-    yellow: "from-mustard/20 to-mustard/5 text-foreground",
-    green: "from-success/15 to-success/5 text-success",
+    blue: "from-caley-blue/10 to-transparent text-caley-blue",
+    orange: "from-warm-orange/12 to-transparent text-warm-orange",
+    red: "from-hotdog-red/12 to-transparent text-hotdog-red",
+    yellow: "from-mustard/18 to-transparent text-caley-navy",
+    green: "from-success/12 to-transparent text-success",
+  };
+  const topBar: Record<string, string> = {
+    blue: "bg-caley-blue",
+    orange: "bg-warm-orange",
+    red: "bg-hotdog-red",
+    yellow: "bg-mustard",
+    green: "bg-success",
   };
   return (
     <motion.div
       whileHover={{ y: -3 }}
-      className={`relative overflow-hidden rounded-2xl glass p-4`}
+      className="relative overflow-hidden rounded-2xl glass-strong p-4"
     >
+      <div className={`absolute left-0 right-0 top-0 h-1 ${topBar[tint]}`} />
       <div className={`absolute inset-0 -z-0 bg-gradient-to-br ${tints[tint]}`} />
-      <div className="relative flex items-start justify-between">
+      <div className="relative flex items-start justify-between pt-1">
         <div>
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">
             {label}
           </div>
-          <div className="mt-1 text-2xl font-black text-foreground">{value}</div>
+          <div className="mt-1.5 text-3xl font-black text-caley-navy tabular-nums">{value}</div>
         </div>
-        <div className={`inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/70`}>
+        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-soft ring-1 ring-border">
           <Icon className="h-4 w-4" />
         </div>
       </div>
