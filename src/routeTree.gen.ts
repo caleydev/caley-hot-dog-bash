@@ -9,38 +9,114 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TicketTicketNumberRouteImport } from './routes/ticket.$ticketNumber'
+import { Route as ThanksParticipantIdRouteImport } from './routes/thanks.$participantId'
+import { Route as GiveawayParticipantIdRouteImport } from './routes/giveaway.$participantId'
+import { Route as AdminDashboardRouteImport } from './routes/admin_.dashboard'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TicketTicketNumberRoute = TicketTicketNumberRouteImport.update({
+  id: '/ticket/$ticketNumber',
+  path: '/ticket/$ticketNumber',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThanksParticipantIdRoute = ThanksParticipantIdRouteImport.update({
+  id: '/thanks/$participantId',
+  path: '/thanks/$participantId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GiveawayParticipantIdRoute = GiveawayParticipantIdRouteImport.update({
+  id: '/giveaway/$participantId',
+  path: '/giveaway/$participantId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin_/dashboard',
+  path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
+  '/thanks/$participantId': typeof ThanksParticipantIdRoute
+  '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
+  '/thanks/$participantId': typeof ThanksParticipantIdRoute
+  '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/admin_/dashboard': typeof AdminDashboardRoute
+  '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
+  '/thanks/$participantId': typeof ThanksParticipantIdRoute
+  '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/dashboard'
+    | '/giveaway/$participantId'
+    | '/thanks/$participantId'
+    | '/ticket/$ticketNumber'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/admin/dashboard'
+    | '/giveaway/$participantId'
+    | '/thanks/$participantId'
+    | '/ticket/$ticketNumber'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin_/dashboard'
+    | '/giveaway/$participantId'
+    | '/thanks/$participantId'
+    | '/ticket/$ticketNumber'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  GiveawayParticipantIdRoute: typeof GiveawayParticipantIdRoute
+  ThanksParticipantIdRoute: typeof ThanksParticipantIdRoute
+  TicketTicketNumberRoute: typeof TicketTicketNumberRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +124,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ticket/$ticketNumber': {
+      id: '/ticket/$ticketNumber'
+      path: '/ticket/$ticketNumber'
+      fullPath: '/ticket/$ticketNumber'
+      preLoaderRoute: typeof TicketTicketNumberRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/thanks/$participantId': {
+      id: '/thanks/$participantId'
+      path: '/thanks/$participantId'
+      fullPath: '/thanks/$participantId'
+      preLoaderRoute: typeof ThanksParticipantIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/giveaway/$participantId': {
+      id: '/giveaway/$participantId'
+      path: '/giveaway/$participantId'
+      fullPath: '/giveaway/$participantId'
+      preLoaderRoute: typeof GiveawayParticipantIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/dashboard': {
+      id: '/admin_/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  GiveawayParticipantIdRoute: GiveawayParticipantIdRoute,
+  ThanksParticipantIdRoute: ThanksParticipantIdRoute,
+  TicketTicketNumberRoute: TicketTicketNumberRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
