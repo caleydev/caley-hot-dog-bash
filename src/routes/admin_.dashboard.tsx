@@ -516,6 +516,7 @@ function WinnersView({ winners }: { winners: Winner[] }) {
         </tbody>
       </table>
     </div>
+    </div>
   );
 }
 
