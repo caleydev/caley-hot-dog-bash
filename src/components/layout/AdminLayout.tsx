@@ -13,24 +13,24 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
         <div className="absolute bottom-0 -left-32 h-[24rem] w-[24rem] rounded-full bg-caley-navy/10 blur-3xl" />
       </div>
       <header className="sticky top-0 z-20 bg-white/85 backdrop-blur-xl border-b border-caley-navy/10 shadow-[0_1px_0_0_color-mix(in_oklab,var(--caley-navy)_6%,transparent)]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Caley Insurance" className="h-9 w-auto" />
-            <div className="hidden sm:block border-l border-border pl-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <img src={logo} alt="Caley Insurance" className="h-7 sm:h-9 w-auto flex-shrink-0" />
+            <div className="border-l border-border pl-2 sm:pl-3 min-w-0">
               <div className="text-[15px] font-bold text-caley-navy leading-tight">Hot Dog Event Dashboard</div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Private access • Caley HQ</div>
+              <div className="hidden sm:block text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">Private access • Caley HQ</div>
             </div>
           </div>
           <Button
             size="sm"
             variant="outline"
-            className="border-caley-navy/20 text-caley-navy hover:bg-caley-navy hover:text-white hover:border-caley-navy transition-colors"
+            className="border-caley-navy/20 text-caley-navy hover:bg-caley-navy hover:text-white hover:border-caley-navy transition-colors flex-shrink-0 px-2 sm:px-3"
             onClick={() => {
               logoutAdmin();
               navigate({ to: "/admin" });
             }}
           >
-            <LogOut className="h-4 w-4" /> Logout
+            <LogOut className="h-4 w-4" /> <span className="hidden sm:inline">Logout</span>
           </Button>
         </div>
       </header>
