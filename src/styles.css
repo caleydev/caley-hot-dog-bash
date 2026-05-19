@@ -98,16 +98,9 @@
   /* Layered mesh-style hero background: navy/blue at top, cream/ice near form */
   --gradient-hero:
     radial-gradient(120% 60% at 50% -10%, #103B68 0%, transparent 60%),
-    radial-gradient(80% 40% at 15% 6%, color-mix(in oklab, #0B2A4A 85%, transparent) 0%, transparent 60%),
-    radial-gradient(80% 40% at 85% 10%, color-mix(in oklab, var(--caley-blue) 55%, transparent) 0%, transparent 60%),
-    radial-gradient(60% 30% at 50% 95%, color-mix(in oklab, var(--cream) 75%, transparent) 0%, transparent 65%),
-    linear-gradient(180deg,
-      #081F3D 0%,
-      #0B2A4A 14%,
-      #103B68 26%,
-      color-mix(in oklab, var(--caley-sky) 55%, white) 52%,
-      var(--caley-ice) 72%,
-      oklch(0.99 0.01 95) 100%);
+    radial-gradient(80% 50% at 15% 20%, color-mix(in oklab, var(--caley-blue) 35%, transparent) 0%, transparent 65%),
+    radial-gradient(80% 50% at 85% 80%, color-mix(in oklab, var(--caley-blue) 30%, transparent) 0%, transparent 65%),
+    linear-gradient(180deg, #081F3D 0%, #0B2A4A 50%, #081F3D 100%);
   --gradient-brand: linear-gradient(135deg, var(--caley-navy) 0%, var(--caley-blue) 100%);
   --gradient-warm: linear-gradient(135deg, var(--hotdog-red) 0%, var(--mustard) 100%);
   --gradient-admin:
