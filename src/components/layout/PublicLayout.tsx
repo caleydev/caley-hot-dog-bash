@@ -6,29 +6,21 @@ import logo from "@/assets/caley-logo.webp";
 export function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
-      {/* Layered background — subtle navy depth + warm cream near form */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-40 -left-32 h-[28rem] w-[28rem] rounded-full bg-caley-navy/15 blur-3xl animate-blob" />
-        <div className="absolute top-1/4 -right-40 h-[26rem] w-[26rem] rounded-full bg-caley-sky/30 blur-3xl animate-blob" style={{ animationDelay: "-5s" }} />
-        <div className="absolute bottom-0 left-1/3 h-[22rem] w-[22rem] rounded-full bg-mustard/15 blur-3xl animate-blob" style={{ animationDelay: "-9s" }} />
-        {/* Faint grid */}
-        <div className="absolute inset-0 opacity-[0.035]" style={{
-          backgroundImage: "linear-gradient(var(--caley-navy) 1px, transparent 1px), linear-gradient(90deg, var(--caley-navy) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-        }} />
-      </div>
+      {/* Continuous hero atmosphere — slow drifting glows + top-fading grid */}
+      <div aria-hidden className="hero-atmos" />
+      <div aria-hidden className="hero-grid-fade" />
 
       <header className="sticky top-0 z-20 px-4 pt-3">
         <motion.div
           initial={{ y: -16, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="mx-auto flex max-w-md items-center justify-between glass-strong rounded-full pl-2 pr-3 py-1.5"
+          className="mx-auto flex max-w-md items-center justify-between rounded-full pl-2 pr-3 py-1.5 border border-white/15 bg-white/10 backdrop-blur-xl shadow-[0_8px_24px_-12px_rgba(0,0,0,0.35)]"
         >
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="Caley Insurance" className="h-7 w-auto" />
+            <img src={logo} alt="Caley Insurance" className="h-7 w-auto brightness-0 invert" />
           </Link>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-caley-navy/5 px-2.5 py-1 text-[11px] font-semibold text-caley-navy">
-            <Ticket className="h-3 w-3 text-hotdog-red" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold text-white">
+            <Ticket className="h-3 w-3 text-mustard" />
             Hot Dog Event
           </span>
         </motion.div>
