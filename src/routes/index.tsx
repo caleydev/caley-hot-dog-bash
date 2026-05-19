@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Clock3, Sparkles } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { LeadForm } from "@/components/forms/LeadForm";
-import { EventBadge } from "@/components/ui/EventBadge";
 import { HeroTicket } from "@/components/ui/HeroTicket";
 import sloganAsset from "@/assets/slogan-call-someone-special.png";
 
