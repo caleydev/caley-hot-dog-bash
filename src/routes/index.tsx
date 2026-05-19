@@ -23,44 +23,54 @@ function Index() {
           <EventBadge>Evento especial • Caley Insurance</EventBadge>
 
           <motion.div
-            initial={{ y: 16, opacity: 0 }}
+            initial={{ y: 18, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.9, ease: "easeOut", delay: 0.1 }}
-            className="relative mx-auto mt-1 w-full max-w-[520px]"
+            className="relative mx-auto mt-1 w-full max-w-[560px]"
           >
-            {/* Soft blue aura behind slogan */}
+            {/* Dark navy slogan stage — premium illuminated wall sign */}
             <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 -z-10 blur-3xl opacity-70"
+              className="relative overflow-hidden rounded-[1.75rem] border border-caley-blue/25 px-5 py-8 sm:px-10 sm:py-12 shadow-[0_30px_80px_-30px_rgba(8,31,61,0.65),0_0_0_1px_color-mix(in_oklab,var(--caley-blue)_18%,transparent)_inset]"
               style={{
                 background:
-                  "radial-gradient(60% 55% at 50% 50%, color-mix(in oklab, var(--caley-blue) 35%, transparent) 0%, transparent 70%)",
+                  "radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--caley-blue) 28%, transparent) 0%, transparent 55%), radial-gradient(80% 60% at 50% 100%, color-mix(in oklab, var(--caley-blue) 18%, transparent) 0%, transparent 60%), linear-gradient(160deg, #0B2A4A 0%, #081F3D 60%, #061830 100%)",
               }}
-            />
-            <motion.div
-              animate={{ opacity: [0.85, 1, 0.85] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative"
             >
+              {/* Subtle wall grid texture */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(color-mix(in oklab, white 60%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, white 60%, transparent) 1px, transparent 1px)",
+                  backgroundSize: "28px 28px",
+                }}
+              />
+              {/* Animated soft glow */}
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute inset-0"
+                animate={{ opacity: [0.55, 0.85, 0.55] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  background:
+                    "radial-gradient(55% 45% at 50% 50%, color-mix(in oklab, var(--caley-blue) 45%, transparent) 0%, transparent 70%)",
+                }}
+              />
+
               <h1 className="sr-only">Call Someone Special Today — Caley Insurance</h1>
               <img
                 src={sloganAsset}
                 alt="Call Someone Special Today — slogan de Caley Insurance con letras iluminadas que sugieren CALEY"
-                className="relative mx-auto w-full select-none drop-shadow-[0_8px_30px_color-mix(in_oklab,var(--caley-blue)_35%,transparent)]"
+                className="relative mx-auto w-full max-w-[460px] select-none drop-shadow-[0_0_24px_color-mix(in_oklab,var(--caley-blue)_60%,transparent)]"
                 draggable={false}
               />
-            </motion.div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-caley-blue/80">
-              Caley signature message
             </div>
           </motion.div>
 
-          <p className="text-[15px] text-caley-navy/80 max-w-md mx-auto leading-relaxed pt-1">
+          <p className="text-[15px] text-caley-navy/85 max-w-md mx-auto leading-relaxed pt-1">
             Regístrate, dinos qué seguro te interesa y participa por premios
             especiales del evento.
-          </p>
-          <p className="text-[13px] text-muted-foreground max-w-md mx-auto">
-            Hot dogs, premios y una experiencia especial con Caley Insurance.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
