@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TicketTicketNumberRouteImport } from './routes/ticket.$ticketNumber'
 import { Route as ThanksParticipantIdRouteImport } from './routes/thanks.$participantId'
 import { Route as GiveawayParticipantIdRouteImport } from './routes/giveaway.$participantId'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
 
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
@@ -40,17 +41,24 @@ const GiveawayParticipantIdRoute = GiveawayParticipantIdRouteImport.update({
   path: '/giveaway/$participantId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
@@ -58,7 +66,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/dashboard': typeof AdminDashboardRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
@@ -68,6 +77,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/admin/dashboard'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
@@ -75,6 +85,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/admin/dashboard'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
@@ -82,6 +93,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/admin/dashboard'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
@@ -89,7 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   GiveawayParticipantIdRoute: typeof GiveawayParticipantIdRoute
   ThanksParticipantIdRoute: typeof ThanksParticipantIdRoute
   TicketTicketNumberRoute: typeof TicketTicketNumberRoute
@@ -132,12 +144,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GiveawayParticipantIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminDashboardRoute: typeof AdminDashboardRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDashboardRoute: AdminDashboardRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   GiveawayParticipantIdRoute: GiveawayParticipantIdRoute,
   ThanksParticipantIdRoute: ThanksParticipantIdRoute,
   TicketTicketNumberRoute: TicketTicketNumberRoute,
