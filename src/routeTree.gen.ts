@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TicketTicketNumberRouteImport } from './routes/ticket.$ticketNumber'
 import { Route as ThanksParticipantIdRouteImport } from './routes/thanks.$participantId'
 import { Route as GiveawayParticipantIdRouteImport } from './routes/giveaway.$participantId'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const GiveawayParticipantIdRoute = GiveawayParticipantIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
@@ -50,6 +58,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/giveaway/$participantId': typeof GiveawayParticipantIdRoute
   '/thanks/$participantId': typeof ThanksParticipantIdRoute
   '/ticket/$ticketNumber': typeof TicketTicketNumberRoute
@@ -58,18 +67,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/giveaway/$participantId'
     | '/thanks/$participantId'
     | '/ticket/$ticketNumber'
@@ -77,6 +89,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   GiveawayParticipantIdRoute: typeof GiveawayParticipantIdRoute
   ThanksParticipantIdRoute: typeof ThanksParticipantIdRoute
   TicketTicketNumberRoute: typeof TicketTicketNumberRoute
@@ -84,6 +97,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -117,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   GiveawayParticipantIdRoute: GiveawayParticipantIdRoute,
   ThanksParticipantIdRoute: ThanksParticipantIdRoute,
   TicketTicketNumberRoute: TicketTicketNumberRoute,
