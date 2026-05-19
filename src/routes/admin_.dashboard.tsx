@@ -38,7 +38,7 @@ import { downloadCsv, toCsv } from "@/utils/export";
 import { formatPhone } from "@/utils/phone";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/dashboard")({
+export const Route = createFileRoute("/admin_/dashboard")({
   component: AdminDashboard,
 });
 
