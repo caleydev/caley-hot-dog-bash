@@ -592,27 +592,33 @@ function ExportView({
   };
 
   const buttons = [
-    { label: "Download Participants CSV", count: participants.length, fn: exportParticipants },
-    { label: "Download Referrals CSV", count: referrals.length, fn: exportReferrals },
-    { label: "Download Giveaway Entries CSV", count: entries.length, fn: exportEntries },
-    { label: "Download Winners CSV", count: winners.length, fn: exportWinners },
-    { label: "Download All Event Data CSV", count: participants.length + referrals.length + entries.length + winners.length, fn: exportAll },
+    { label: "Participants", desc: "Full lead registry with interests and consent.", count: participants.length, fn: exportParticipants },
+    { label: "Referrals", desc: "Referred contacts tied back to each participant.", count: referrals.length, fn: exportReferrals },
+    { label: "Giveaway Entries", desc: "All tickets generated through the referral flow.", count: entries.length, fn: exportEntries },
+    { label: "Winners", desc: "Drawn winners with prize and timestamps.", count: winners.length, fn: exportWinners },
+    { label: "All Event Data", desc: "Downloads every dataset above as separate CSVs.", count: participants.length + referrals.length + entries.length + winners.length, fn: exportAll },
   ];
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      {buttons.map((b) => (
-        <div key={b.label} className="glass rounded-2xl p-4 flex items-center justify-between">
-          <div>
-            <div className="font-semibold text-sm">{b.label}</div>
-            <div className="text-xs text-muted-foreground">{b.count} records</div>
+    <div className="space-y-3">
+      <SectionHeading title="Export Center" subtitle="Download event data as CSV for follow-up and reporting" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        {buttons.map((b) => (
+          <div key={b.label} className="glass-strong rounded-2xl p-4 flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="font-bold text-caley-navy">{b.label}</div>
+                <p className="text-xs text-muted-foreground mt-0.5">{b.desc}</p>
+              </div>
+              <Badge variant="secondary" className="flex-shrink-0">{b.count} rows</Badge>
+            </div>
+            <Button onClick={b.fn} disabled={b.count === 0} variant="outline" className="w-full sm:w-auto sm:self-start">
+              <Download className="h-4 w-4" /> Download CSV
+            </Button>
           </div>
-          <Button onClick={b.fn} disabled={b.count === 0} variant="outline">
-            <Download className="h-4 w-4" /> CSV
-          </Button>
-        </div>
-      ))}
-      <p className="sm:col-span-2 text-xs text-muted-foreground">
+        ))}
+      </div>
+      <p className="text-xs text-muted-foreground">
         Excel (.xlsx) export can be added by plugging in a library like <code>xlsx</code>; the export helpers are structured to make that swap easy.
       </p>
     </div>
