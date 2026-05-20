@@ -20,17 +20,23 @@ function ThanksPage() {
   const [declined, setDeclined] = useState(false);
 
   useEffect(() => {
-    eventService.getParticipantById(participantId).then((p) => {
-      setParticipant(p);
-      setLoading(false);
-      if (p) setTimeout(() => bigBurst(), 200);
-    });
+    eventService.getParticipantById(participantId)
+      .then((p) => {
+        setParticipant(p);
+        if (p) setTimeout(() => bigBurst(), 200);
+      })
+      .catch(() => {
+        setParticipant(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [participantId]);
 
   if (loading) {
     return (
       <PublicLayout>
-        <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando…</div>
+        <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando...</div>
       </PublicLayout>
     );
   }
@@ -51,7 +57,7 @@ function ThanksPage() {
     return (
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-3">
-          <span className="text-5xl">🌭</span>
+          <span className="text-5xl">Thank you</span>
           <h2 className="text-2xl font-bold">Gracias por registrarte</h2>
           <p className="text-muted-foreground">Disfruta el evento.</p>
         </div>
@@ -75,9 +81,9 @@ function ThanksPage() {
           <CheckCircle2 className="h-9 w-9" />
         </motion.div>
         <div>
-          <h1 className="text-3xl font-black text-gradient-brand">¡Listo, estás registrado!</h1>
+          <h1 className="text-3xl font-black text-gradient-brand">Listo, estas registrado!</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Gracias por acompañarnos en el evento de Caley Insurance, {participant.fullName.split(" ")[0]}.
+            Gracias por acompanarnos en el evento de Caley Insurance, {participant.fullName.split(" ")[0]}.
           </p>
         </div>
 

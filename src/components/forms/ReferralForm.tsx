@@ -34,7 +34,9 @@ export function ReferralForm({ participant }: { participant: Participant }) {
     const normalized = rows.map((r) => normalizePhone(r.phone));
     const uniques = new Set(normalized);
     if (uniques.size !== normalized.length) return false;
-    if (normalized.includes(normalizePhone(participant.phone))) return false;
+    if (participant.phone) {
+      return !normalized.includes(normalizePhone(participant.phone));
+    }
     return true;
   }, [rows, participant.phone]);
 
@@ -47,7 +49,7 @@ export function ReferralForm({ participant }: { participant: Participant }) {
     ev.preventDefault();
     if (!canSubmit) {
       if (!phonesValid)
-        toast.error("Los teléfonos no pueden repetirse ni coincidir con el tuyo.");
+        toast.error("Los telefonos no pueden repetirse ni coincidir con el tuyo.");
       return;
     }
     setSubmitting(true);
@@ -109,7 +111,7 @@ export function ReferralForm({ participant }: { participant: Participant }) {
                 />
               </div>
               <div>
-                <Label htmlFor={`phone-${i}`}>Teléfono</Label>
+                <Label htmlFor={`phone-${i}`}>Telefono</Label>
                 <Input
                   id={`phone-${i}`}
                   inputMode="tel"
@@ -128,7 +130,7 @@ export function ReferralForm({ participant }: { participant: Participant }) {
         <Checkbox checked={confirm} onCheckedChange={(v) => setConfirm(v === true)} className="mt-0.5" />
         <span className="text-xs text-foreground/80">
           Confirmo que conozco a estas personas y entiendo que Caley Insurance
-          podría contactarlas sobre opciones de seguro.
+          podria contactarlas sobre opciones de seguro.
         </span>
       </label>
 
@@ -139,10 +141,10 @@ export function ReferralForm({ participant }: { participant: Participant }) {
       >
         {submitting ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Generando ticket…
+            <Loader2 className="h-4 w-4 animate-spin" /> Generando ticket...
           </>
         ) : (
-          "Generar mi ticket 🎟️"
+          "Generar mi ticket"
         )}
       </Button>
 

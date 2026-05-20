@@ -25,6 +25,7 @@ import { KpiCard } from "@/components/admin/KpiCard";
 import { WinnerWheel } from "@/components/admin/WinnerWheel";
 import { eventService } from "@/services/eventService";
 import { isAdmin } from "@/lib/adminAuth";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { localEventAdapter } from "@/services/adapters/localEventAdapter";
 import type {
   GiveawayEntry,
@@ -63,11 +64,13 @@ function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (!isAdmin()) {
-      navigate({ to: "/admin" });
-      return;
-    }
-    refresh();
+    isAdmin().then((allowed) => {
+      if (!allowed) {
+        navigate({ to: "/admin" });
+        return;
+      }
+      refresh();
+    });
   }, [navigate, refresh]);
 
   // KPIs
@@ -143,11 +146,13 @@ function AdminDashboard() {
             })} empty="No giveaway entries yet." emptyIcon={Ticket} />
           </section>
 
-          <div className="flex flex-wrap gap-2 justify-end">
-            <Button variant="outline" onClick={async () => { await localEventAdapter.seedDemo(); await refresh(); toast.success("Demo data seeded"); }}>
-              <Database className="h-4 w-4" /> Seed demo data
-            </Button>
-          </div>
+          {!isSupabaseConfigured && (
+            <div className="flex flex-wrap gap-2 justify-end">
+              <Button variant="outline" onClick={async () => { await localEventAdapter.seedDemo(); await refresh(); toast.success("Demo data seeded"); }}>
+                <Database className="h-4 w-4" /> Seed demo data
+              </Button>
+            </div>
+          )}
         </TabsContent>
 
         {/* PARTICIPANTS */}

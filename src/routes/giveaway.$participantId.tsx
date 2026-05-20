@@ -16,20 +16,26 @@ function GiveawayPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    eventService.getParticipantById(participantId).then((p) => {
-      setParticipant(p);
-      setLoading(false);
-    });
+    eventService.getParticipantById(participantId)
+      .then((p) => {
+        setParticipant(p);
+      })
+      .catch(() => {
+        setParticipant(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [participantId]);
 
   if (loading) {
-    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando…</div></PublicLayout>;
+    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando...</div></PublicLayout>;
   }
   if (!participant) {
     return (
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-4">
-          <h2 className="text-xl font-bold">Enlace inválido</h2>
+          <h2 className="text-xl font-bold">Enlace invalido</h2>
           <Button asChild><Link to="/">Volver al inicio</Link></Button>
         </div>
       </PublicLayout>
@@ -41,7 +47,7 @@ function GiveawayPage() {
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-4">
           <h2 className="text-xl font-bold">Ya tienes un ticket</h2>
-          <p className="text-muted-foreground">Tu número: <strong>{participant.ticketNumber}</strong></p>
+          <p className="text-muted-foreground">Tu numero: <strong>{participant.ticketNumber}</strong></p>
           <Button asChild className="gradient-brand text-white">
             <Link to="/ticket/$ticketNumber" params={{ ticketNumber: participant.ticketNumber }}>Ver mi ticket</Link>
           </Button>
@@ -56,7 +62,7 @@ function GiveawayPage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl sm:text-4xl font-black text-gradient-warm">Entra al Giveaway</h1>
           <p className="text-sm text-muted-foreground">
-            Agrega 3 personas que podrían necesitar seguro y recibe tu número de ticket.
+            Agrega 3 personas que podrian necesitar seguro y recibe tu numero de ticket.
           </p>
         </div>
         <ReferralForm participant={participant} />

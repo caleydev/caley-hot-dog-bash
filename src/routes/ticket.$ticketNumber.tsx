@@ -20,19 +20,25 @@ function TicketPage() {
   const [valid, setValid] = useState(true);
 
   useEffect(() => {
-    eventService.getTicketByNumber(ticketNumber).then((res) => {
-      if (!res) {
+    eventService.getTicketByNumber(ticketNumber)
+      .then((res) => {
+        if (!res) {
+          setValid(false);
+        } else {
+          setParticipant(res.participant);
+          setTimeout(() => bigBurst(), 300);
+        }
+      })
+      .catch(() => {
         setValid(false);
-      } else {
-        setParticipant(res.participant);
-        setTimeout(() => bigBurst(), 300);
-      }
-      setLoading(false);
-    });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [ticketNumber]);
 
   if (loading) {
-    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando…</div></PublicLayout>;
+    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando...</div></PublicLayout>;
   }
   if (!valid) {
     return (
@@ -49,9 +55,9 @@ function TicketPage() {
     <PublicLayout>
       <div className="mx-auto max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-black text-gradient-brand">¡Tu ticket está listo!</h1>
+          <h1 className="text-3xl font-black text-gradient-brand">Tu ticket esta listo!</h1>
           <p className="text-sm text-muted-foreground">
-            Guarda este número. Lo usaremos para anunciar los ganadores durante el evento.
+            Guarda este numero. Lo usaremos para anunciar los ganadores durante el evento.
           </p>
         </div>
 
@@ -63,10 +69,10 @@ function TicketPage() {
             className="flex-1 h-12"
             onClick={() => {
               navigator.clipboard.writeText(ticketNumber);
-              toast.success("Número copiado");
+              toast.success("Numero copiado");
             }}
           >
-            <Copy className="h-4 w-4" /> Copiar número
+            <Copy className="h-4 w-4" /> Copiar numero
           </Button>
           <Button asChild className="flex-1 h-12 gradient-brand text-white">
             <Link to="/"><Home className="h-4 w-4"/> Volver al inicio</Link>

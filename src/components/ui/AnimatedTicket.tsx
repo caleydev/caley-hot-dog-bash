@@ -16,7 +16,6 @@ export function AnimatedTicket({
       className="ticket-shine relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] gradient-brand p-[3px] shadow-glow"
     >
       <div className="relative rounded-[1.75rem] bg-white px-6 py-7 text-center">
-        {/* Perforation notches */}
         <span className="absolute left-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-[var(--background)] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--caley-navy)_15%,transparent)]" />
         <span className="absolute right-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-[var(--background)] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--caley-navy)_15%,transparent)]" />
 
@@ -25,7 +24,6 @@ export function AnimatedTicket({
           <span className="text-muted-foreground">Giveaway</span>
         </div>
 
-        {/* Accent gold/coral line */}
         <div className="mt-3 h-[3px] w-full rounded-full" style={{ background: "linear-gradient(90deg, var(--mustard), var(--hotdog-red))" }} />
 
         <div className="my-4 border-y border-dashed border-border/70 py-5">
@@ -33,7 +31,7 @@ export function AnimatedTicket({
           <div className="mt-1.5 text-[2.6rem] leading-none font-black tracking-tight text-gradient-brand tabular-nums">
             {ticketNumber}
           </div>
-          <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">Guarda este número</div>
+          <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">Guarda este numero</div>
         </div>
 
         {name && (

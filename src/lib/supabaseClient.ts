@@ -1,11 +1,21 @@
-// Supabase-ready stub. The app currently runs in local/demo mode.
-// When Lovable Cloud / Supabase is enabled, wire up @supabase/supabase-js here
-// and the supabaseEventAdapter will take over automatically.
+import { createClient } from "@supabase/supabase-js";
 
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as
+  | string
+  | undefined;
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as
+  | string
+  | undefined;
 
-export const hasSupabase = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+export const isSupabaseConfigured = Boolean(
+  SUPABASE_URL && SUPABASE_ANON_KEY,
+);
+
+export const supabase = isSupabaseConfigured
+  ? createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!)
+  : null;
+
+export const hasSupabase = isSupabaseConfigured;
 
 /*
 Suggested SQL schema:

@@ -11,6 +11,7 @@ import { INTEREST_OPTIONS, type Interest } from "@/types/event";
 import { formatPhone, isValidPhone, normalizePhone } from "@/utils/phone";
 import { isValidEmail } from "@/utils/validation";
 import { eventService } from "@/services/eventService";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { burst } from "@/lib/confetti";
 import { toast } from "sonner";
 
@@ -40,8 +41,8 @@ export function LeadForm() {
   const validate = (): Errors => {
     const e: Errors = {};
     if (!fullName.trim()) e.fullName = "El nombre es requerido.";
-    if (!isValidPhone(phone)) e.phone = "Ingresa un teléfono válido.";
-    if (!isValidEmail(email)) e.email = "Ingresa un correo válido.";
+    if (!isValidPhone(phone)) e.phone = "Ingresa un telefono valido.";
+    if (!isValidEmail(email)) e.email = "Ingresa un correo valido.";
     if (interests.length === 0) e.interests = "Selecciona al menos un seguro.";
     if (!consent) e.consent = "Debes aceptar el consentimiento.";
     return e;
@@ -61,15 +62,21 @@ export function LeadForm() {
     if (Object.keys(v).length > 0) return;
     setSubmitting(true);
     try {
-      const existing = await eventService.findParticipantByPhoneOrEmail(
-        phone,
-        email,
-      );
-      if (existing) {
-        toast.info("Parece que ya te registraste. Te llevamos al siguiente paso.");
-        navigate({ to: "/thanks/$participantId", params: { participantId: existing.id } });
-        return;
+      if (!isSupabaseConfigured) {
+        const existing = await eventService.findParticipantByPhoneOrEmail(
+          phone,
+          email,
+        );
+        if (existing) {
+          toast.info("Parece que ya te registraste. Te llevamos al siguiente paso.");
+          navigate({
+            to: "/thanks/$participantId",
+            params: { participantId: existing.id },
+          });
+          return;
+        }
       }
+
       const p = await eventService.createParticipant({
         fullName: fullName.trim(),
         phone: normalizePhone(phone),
@@ -77,6 +84,9 @@ export function LeadForm() {
         interests,
         consentContact: true,
       });
+      if (p.alreadyExists) {
+        toast.info("Parece que ya te registraste. Te llevamos al siguiente paso.");
+      }
       burst();
       navigate({ to: "/thanks/$participantId", params: { participantId: p.id } });
     } catch (err) {
@@ -106,7 +116,7 @@ export function LeadForm() {
             <div className="text-sm font-bold text-caley-navy">Registro</div>
           </div>
         </div>
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Seguro · Rápido</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Seguro · Rapido</span>
       </div>
 
       <div className="space-y-4">
@@ -126,7 +136,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label htmlFor="phone" className="text-caley-navy font-semibold">Teléfono</Label>
+          <Label htmlFor="phone" className="text-caley-navy font-semibold">Telefono</Label>
           <Input
             id="phone"
             inputMode="tel"
@@ -142,7 +152,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label htmlFor="email" className="text-caley-navy font-semibold">Correo electrónico</Label>
+          <Label htmlFor="email" className="text-caley-navy font-semibold">Correo electronico</Label>
           <Input
             id="email"
             type="email"
@@ -158,7 +168,7 @@ export function LeadForm() {
         </div>
 
         <div>
-          <Label className="text-caley-navy font-semibold">Seguros de interés</Label>
+          <Label className="text-caley-navy font-semibold">Seguros de interes</Label>
           <div className="mt-2 flex flex-wrap gap-2">
             {INTEREST_OPTIONS.map((i) => (
               <InterestChip
@@ -196,7 +206,7 @@ export function LeadForm() {
         >
           {submitting ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Guardando…
+              <Loader2 className="h-4 w-4 animate-spin" /> Guardando...
             </>
           ) : (
             "Continuar"
