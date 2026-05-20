@@ -55,9 +55,20 @@ function TicketPage() {
     <PublicLayout>
       <div className="mx-auto max-w-md space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-black text-gradient-brand">Tu ticket esta listo!</h1>
-          <p className="text-sm text-muted-foreground">
-            Guarda este numero. Lo usaremos para anunciar los ganadores durante el evento.
+          <h1
+            className="text-3xl font-black text-[#F8FBFF]"
+            style={{
+              textShadow:
+                "0 2px 18px rgba(0, 0, 0, 0.35), 0 0 24px rgba(125, 190, 255, 0.22)",
+            }}
+          >
+            Tu ticket está listo!
+          </h1>
+          <p
+            className="text-sm text-[rgba(235,247,255,0.82)]"
+            style={{ textShadow: "0 1px 10px rgba(0, 0, 0, 0.24)" }}
+          >
+            Guarda este número. Lo usaremos para anunciar los ganadores durante el evento.
           </p>
         </div>
 
@@ -69,10 +80,10 @@ function TicketPage() {
             className="flex-1 h-12"
             onClick={() => {
               navigator.clipboard.writeText(ticketNumber);
-              toast.success("Numero copiado");
+              toast.success("Número copiado");
             }}
           >
-            <Copy className="h-4 w-4" /> Copiar numero
+            <Copy className="h-4 w-4" /> Copiar número
           </Button>
           <Button asChild className="flex-1 h-12 gradient-brand text-white">
             <Link to="/"><Home className="h-4 w-4"/> Volver al inicio</Link>

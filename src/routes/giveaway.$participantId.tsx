@@ -60,9 +60,20 @@ function GiveawayPage() {
     <PublicLayout>
       <div className="mx-auto max-w-xl space-y-5">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl sm:text-4xl font-black text-gradient-warm">Entra al Giveaway</h1>
-          <p className="text-sm text-muted-foreground">
-            Agrega 3 personas que podrian necesitar seguro y recibe tu numero de ticket.
+          <h1
+            className="text-3xl sm:text-4xl font-black text-[#F8FBFF]"
+            style={{
+              textShadow:
+                "0 2px 18px rgba(0, 0, 0, 0.35), 0 0 24px rgba(125, 190, 255, 0.22)",
+            }}
+          >
+            Entra al Giveaway
+          </h1>
+          <p
+            className="text-sm text-[rgba(235,247,255,0.82)]"
+            style={{ textShadow: "0 1px 10px rgba(0, 0, 0, 0.24)" }}
+          >
+            Agrega 3 personas que podrían necesitar seguro y recibe tu número de ticket.
           </p>
         </div>
         <ReferralForm participant={participant} />
