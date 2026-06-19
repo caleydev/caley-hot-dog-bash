@@ -63,7 +63,9 @@ function Index() {
             </span>
           </div>
 
-          <div className="pt-2">
+          {/* Decorative — hidden on phones so the sign-up form is reachable
+              without a long scroll; users get a real ticket after signing up. */}
+          <div className="hidden pt-2 lg:block">
             <HeroTicket />
           </div>
         </motion.div>

@@ -26,7 +26,7 @@ export function LanguageToggle({ className }: { className?: string }) {
             onClick={() => setLang(option)}
             aria-pressed={active}
             className={cn(
-              "rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider transition-colors",
+              "rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors",
               active
                 ? "bg-white text-caley-navy"
                 : "text-white/70 hover:text-white",

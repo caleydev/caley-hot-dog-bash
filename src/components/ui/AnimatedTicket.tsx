@@ -18,8 +18,8 @@ export function AnimatedTicket({
       className="ticket-shine relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] gradient-brand p-[3px] shadow-glow"
     >
       <div className="relative rounded-[1.75rem] bg-white px-6 py-7 text-center">
-        <span className="absolute left-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-[var(--background)] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--caley-navy)_15%,transparent)]" />
-        <span className="absolute right-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-[var(--background)] shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--caley-navy)_15%,transparent)]" />
+        <span className="absolute left-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-caley-navy" />
+        <span className="absolute right-[-10px] top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-caley-navy" />
 
         <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.18em] text-caley-blue">
           <span className="inline-flex items-center gap-1"><Sparkles className="h-3 w-3 text-mustard" /> {t("animTicket.brand")}</span>
