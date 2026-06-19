@@ -132,7 +132,7 @@ function AdminLogin() {
                   setCode(e.target.value);
                   setError("");
                 }}
-                placeholder="CALEY-HOTDOG-2026"
+                placeholder="Enter access code"
                 className="h-11 pl-9"
                 autoFocus
               />
@@ -153,7 +153,7 @@ function AdminLogin() {
         <p className="text-[10px] text-muted-foreground text-center">
           {isSupabaseConfigured
             ? "Secure Supabase Auth access for Caley HQ."
-            : "Demo mode. Replace with Supabase Auth before public deployment."}
+            : "Authorized Caley staff only."}
         </p>
       </motion.form>
     </div>
