@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Caveat:wght@600;700&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -19,6 +20,10 @@
  */
 
 @theme inline {
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-script: "Caveat", "Bricolage Grotesque", cursive;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -103,10 +108,8 @@
     linear-gradient(180deg, #081F3D 0%, #0B2A4A 50%, #081F3D 100%);
   --gradient-brand: linear-gradient(135deg, var(--caley-navy) 0%, var(--caley-blue) 100%);
   --gradient-warm: linear-gradient(135deg, var(--hotdog-red) 0%, var(--mustard) 100%);
-  --gradient-admin:
-    radial-gradient(900px 500px at 0% 0%, color-mix(in oklab, var(--caley-navy) 14%, transparent), transparent 60%),
-    radial-gradient(700px 400px at 100% 10%, color-mix(in oklab, var(--caley-sky) 22%, transparent), transparent 55%),
-    linear-gradient(180deg, var(--caley-ice) 0%, oklch(0.99 0.008 230) 100%);
+  /* Neutral admin canvas — near-white, no decorative color washes */
+  --gradient-admin: oklch(0.985 0.004 240);
   --shadow-soft: 0 8px 24px -10px color-mix(in oklab, var(--caley-navy) 28%, transparent), 0 2px 6px -2px color-mix(in oklab, var(--caley-navy) 12%, transparent);
   --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--caley-blue) 18%, transparent), 0 16px 48px -16px color-mix(in oklab, var(--caley-blue) 40%, transparent);
   --shadow-warm: 0 14px 40px -16px color-mix(in oklab, var(--hotdog-red) 45%, transparent);
@@ -171,8 +174,28 @@
     background: var(--gradient-hero);
     background-attachment: fixed;
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
+
+  /*
+   * Type scale — a single modular scale (~1.2) on the display family.
+   * Headings default to the display font with tight tracking; override
+   * per-instance only when a specific size is needed.
+   */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+  h1 { font-size: clamp(2rem, 1.4rem + 2.6vw, 3rem); }
+  h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.0625rem; letter-spacing: -0.015em; }
 }
 
 @theme inline {
@@ -226,9 +249,9 @@
       linear-gradient(color-mix(in oklab, white 28%, transparent) 1px, transparent 1px),
       linear-gradient(90deg, color-mix(in oklab, white 28%, transparent) 1px, transparent 1px);
     background-size: 44px 44px;
-    -webkit-mask-image: linear-gradient(180deg, black 0%, black 18%, transparent 42%);
-            mask-image: linear-gradient(180deg, black 0%, black 18%, transparent 42%);
-    opacity: 0.5;
+    -webkit-mask-image: linear-gradient(180deg, black 0%, black 16%, transparent 40%);
+            mask-image: linear-gradient(180deg, black 0%, black 16%, transparent 40%);
+    opacity: 0.28;
   }
   @keyframes drift-a {
     0%   { transform: translate3d(0,0,0) scale(1); }
@@ -266,6 +289,30 @@
     border: 1px solid color-mix(in oklab, white 15%, transparent);
   }
   .bg-admin { background: var(--gradient-admin); background-attachment: fixed; }
+
+  /*
+   * Elevation hierarchy.
+   * .surface       — flat by default: white, hairline border, no shadow.
+   *                  The resting state for static content (cards, tables, panels).
+   * .surface-raised — reserved for things that float or are interactive
+   *                  (hover states, popovers, modals, the active selection).
+   */
+  .surface {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .surface-raised {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+  }
+  .surface-hover {
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .surface-hover:hover {
+    border-color: color-mix(in oklab, var(--caley-blue) 35%, var(--border));
+    box-shadow: var(--shadow-soft);
+  }
   .gradient-brand { background: var(--gradient-brand); }
   .gradient-warm { background: var(--gradient-warm); }
   .text-gradient-brand {
@@ -285,15 +332,15 @@
   .shadow-warm { box-shadow: var(--shadow-warm); }
   .shadow-card { box-shadow: var(--shadow-card); }
   .input-premium {
-    background: white;
+    background: color-mix(in oklab, var(--caley-ice) 55%, white);
     border: 1px solid var(--border);
-    box-shadow: inset 0 1px 0 0 color-mix(in oklab, var(--caley-navy) 6%, transparent), 0 1px 2px -1px color-mix(in oklab, var(--caley-navy) 8%, transparent);
-    transition: box-shadow .15s ease, border-color .15s ease;
+    transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
   }
   .input-premium:focus, .input-premium:focus-visible {
     outline: none;
-    border-color: color-mix(in oklab, var(--caley-blue) 70%, white);
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--caley-blue) 18%, transparent);
+    background: white;
+    border-color: var(--caley-blue);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--caley-blue) 30%, transparent);
   }
   .ticket-shine {
     position: relative;
@@ -322,4 +369,26 @@
     50% { transform: translateY(-15px) rotate(8deg); }
   }
   .animate-float { animation: float-slow 6s ease-in-out infinite; }
+}
+
+/* Respect users who prefer reduced motion: disable the decorative CSS
+ * keyframe animations (drifting glows, shimmer, blobs, shine, pulse).
+ * Framer Motion animations are handled separately via <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmos::before,
+  .hero-atmos::after,
+  .slogan-glow,
+  .animate-blob,
+  .animate-float,
+  .ticket-shine::after,
+  .animate-pulse {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

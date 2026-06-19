@@ -31,4 +31,10 @@ dist-ssr
 *.sln
 *.sw?
 
-.env.local'ndist-static/
+# Env files (never commit your Supabase keys)
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist-static/

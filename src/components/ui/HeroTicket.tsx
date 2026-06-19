@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { Sparkles, Ticket as TicketIcon } from "lucide-react";
+import { useLanguage } from "@/lib/i18n";
 
 /**
  * Premium 3D-style hero ticket — visual anchor for the landing page.
  * Pure presentation; no interaction.
  */
 export function HeroTicket() {
+  const { t } = useLanguage();
   return (
     <div className="relative mx-auto w-full max-w-sm" aria-hidden>
       {/* Floating accent shapes */}
@@ -28,25 +30,26 @@ export function HeroTicket() {
         initial={{ y: 14, opacity: 0, rotate: -2 }}
         animate={{ y: 0, opacity: 1, rotate: -2 }}
         transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.1 }}
-        className="ticket-shine relative overflow-hidden rounded-[1.6rem] gradient-brand p-[2px] shadow-glow"
+        className="relative overflow-hidden rounded-[1.6rem] gradient-brand p-[2px] shadow-glow"
         style={{ transform: "perspective(900px) rotateX(6deg)" }}
       >
         <div className="relative rounded-[1.45rem] bg-white px-5 py-4">
-          <span className="absolute left-[-8px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-[var(--background)]" />
-          <span className="absolute right-[-8px] top-1/2 -translate-y-1/2 h-4 w-4 rounded-full bg-[var(--background)]" />
+          {/* Edge notches — navy-filled cutouts that match the hero background */}
+          <span className="absolute left-[-10px] top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-caley-navy" />
+          <span className="absolute right-[-10px] top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-caley-navy" />
           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.18em] text-caley-blue">
-            <span className="inline-flex items-center gap-1"><TicketIcon className="h-3 w-3" /> Admit One</span>
+            <span className="inline-flex items-center gap-1"><TicketIcon className="h-3 w-3" /> {t("hero.admitOne")}</span>
             <span className="text-muted-foreground">Caley Insurance</span>
           </div>
-          <div className="mt-2 h-[3px] w-full rounded-full" style={{ background: "linear-gradient(90deg, var(--mustard), var(--hotdog-red))" }} />
+          <div className="mt-2 h-[2px] w-full rounded-full" style={{ background: "linear-gradient(90deg, var(--warm-orange), var(--mustard))" }} />
           <div className="mt-3 flex items-end justify-between gap-3">
             <div className="text-left">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Premio Especial</div>
-              <div className="text-lg font-black leading-tight text-caley-navy">Giveaway del Evento</div>
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("hero.prizeLabel")}</div>
+              <div className="font-display text-lg font-bold leading-tight text-caley-navy">{t("hero.prizeTitle")}</div>
             </div>
             <div className="text-right">
-              <div className="text-[9px] uppercase tracking-wider text-muted-foreground">Ticket</div>
-              <div className="text-xl font-black tabular-nums text-gradient-brand">CALEY-00#</div>
+              <div className="text-[9px] uppercase tracking-wider text-muted-foreground">{t("hero.ticket")}</div>
+              <div className="font-display text-xl font-bold tabular-nums text-caley-blue">CALEY-0042</div>
             </div>
           </div>
         </div>

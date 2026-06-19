@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Trophy, Sparkles, Ticket as TicketIcon } from "lucide-react";
+import { Trophy, Sparkles, Ticket as TicketIcon, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +30,22 @@ function firstName(full?: string) {
   return full.trim().split(/\s+/)[0] ?? "";
 }
 
+// Deterministic shuffle so the wheel's segments stay stable across renders for a
+// given seed; bumping the seed reshuffles which tickets are shown.
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const a = [...arr];
+  let s = (seed + 1) * 2654435761;
+  const rand = () => {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
+  };
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export function WinnerWheel({
   entries,
   participants,
@@ -48,6 +64,7 @@ export function WinnerWheel({
   const [winningIdx, setWinningIdx] = useState<number | null>(null);
   const [prize, setPrize] = useState("Hoodie");
   const [open, setOpen] = useState(false);
+  const [shuffleSeed, setShuffleSeed] = useState(0);
   const wheelRef = useRef<HTMLDivElement>(null);
   const repeatEnabled = !isSupabaseConfigured;
 
@@ -60,25 +77,35 @@ export function WinnerWheel({
     [entries, wonTickets, allowRepeat, repeatEnabled],
   );
 
-  // Cap visible segments so labels stay readable. Winner is still drawn from all active.
+  // Cap visible segments so labels stay readable. The winner is drawn ONLY from the
+  // tickets shown on the wheel, so the pointer always lands on the real winner.
+  // When there are more active tickets than fit, "Shuffle" rotates which ones appear.
   const MAX_SEGMENTS = 16;
-  const segmentsShown = active.slice(0, MAX_SEGMENTS);
+  const segmentsShown = useMemo(
+    () => seededShuffle(active, shuffleSeed).slice(0, MAX_SEGMENTS),
+    [active, shuffleSeed],
+  );
   const segCount = Math.max(segmentsShown.length, 1);
   const segAngle = 360 / segCount;
   const showNames = segCount <= 12;
+  const hasOverflow = active.length > segmentsShown.length;
+
+  const onShuffle = () => {
+    if (spinning) return;
+    setShuffleSeed((s) => s + 1);
+  };
 
   const onSpin = () => {
-    if (active.length === 0 || spinning) return;
+    if (segmentsShown.length === 0 || spinning) return;
     setSpinning(true);
     setWinningIdx(null);
-    const winnerIdx = Math.floor(Math.random() * active.length);
-    const visibleIdx = winnerIdx < segmentsShown.length ? winnerIdx : Math.floor(Math.random() * segmentsShown.length);
+    const winnerIdx = Math.floor(Math.random() * segmentsShown.length);
     const turns = 6;
-    const target = 360 * turns + (360 - (visibleIdx * segAngle + segAngle / 2));
+    const target = 360 * turns + (360 - (winnerIdx * segAngle + segAngle / 2));
     setRotation((prev) => prev + target);
     setTimeout(() => {
-      setPickedEntry(active[winnerIdx]);
-      setWinningIdx(visibleIdx);
+      setPickedEntry(segmentsShown[winnerIdx]);
+      setWinningIdx(winnerIdx);
       setOpen(true);
       setSpinning(false);
       bigBurst();
@@ -114,7 +141,7 @@ export function WinnerWheel({
 
   if (entries.length === 0) {
     return (
-      <div className="glass rounded-3xl p-10 text-center">
+      <div className="surface rounded-xl p-10 text-center">
         <Sparkles className="mx-auto h-8 w-8 text-mustard mb-2" />
         <div className="font-semibold text-caley-navy">No giveaway tickets yet</div>
         <p className="text-sm text-muted-foreground mt-1">Once participants complete 3 referrals, their tickets show up here.</p>
@@ -124,14 +151,14 @@ export function WinnerWheel({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-3 glass rounded-2xl p-4">
+      <div className="grid gap-3 sm:grid-cols-3 surface rounded-xl p-4">
         <div className="flex items-center gap-3">
           <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-caley-blue/10 text-caley-blue">
             <TicketIcon className="h-5 w-5" />
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">Active tickets</div>
-            <div className="text-2xl font-black text-caley-navy tabular-nums">{active.length}</div>
+            <div className="font-display text-2xl font-bold text-caley-navy tabular-nums">{active.length}</div>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -140,7 +167,7 @@ export function WinnerWheel({
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">Winners selected</div>
-            <div className="text-2xl font-black text-caley-navy tabular-nums">{winners.length}</div>
+            <div className="font-display text-2xl font-bold text-caley-navy tabular-nums">{winners.length}</div>
           </div>
         </div>
         {repeatEnabled ? (
@@ -215,7 +242,7 @@ export function WinnerWheel({
                         }}
                       >
                         <div
-                          className="font-black tabular-nums leading-none"
+                          className="font-bold tabular-nums leading-none"
                           style={{ fontSize: segCount <= 8 ? 13 : segCount <= 12 ? 11 : 10 }}
                         >
                           {e.ticketNumber}
@@ -251,21 +278,39 @@ export function WinnerWheel({
             <button
               onClick={onSpin}
               disabled={spinning || active.length === 0}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 h-24 w-24 rounded-full gradient-brand text-white font-black text-lg shadow-glow disabled:opacity-60 border-4 border-white transition-transform active:scale-95"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 h-24 w-24 rounded-full gradient-brand text-white font-bold text-lg shadow-glow disabled:opacity-60 border-4 border-white transition-transform active:scale-95"
             >
               {spinning ? "..." : "SPIN"}
             </button>
           </div>
 
-          {entries.length > segmentsShown.length && (
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              Wheel shows {segmentsShown.length} of {active.length} active tickets - winner is drawn randomly from all active tickets.
-            </p>
+          {hasOverflow && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <p className="text-center text-xs text-muted-foreground">
+                Showing {segmentsShown.length} of {active.length} active tickets — the spin draws from the tickets on the wheel. Shuffle to rotate who appears.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onShuffle}
+                disabled={spinning}
+              >
+                <Shuffle className="h-4 w-4" /> Shuffle wheel
+              </Button>
+            </div>
           )}
         </div>
 
+        {/* Screen-reader announcement of the drawn winner */}
+        <div aria-live="assertive" className="sr-only">
+          {pickedEntry && !spinning
+            ? `Winner drawn: ticket ${pickedEntry.ticketNumber}, ${pickedParticipant?.fullName ?? "unknown participant"}.`
+            : ""}
+        </div>
+
         <aside className="space-y-3">
-          <div className="glass rounded-2xl p-4">
+          <div className="surface rounded-xl p-4">
             <div className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">Last winner</div>
             {lastWinner ? (
               <div className="mt-2 space-y-1">
@@ -278,7 +323,7 @@ export function WinnerWheel({
             )}
           </div>
 
-          <div className="glass rounded-2xl p-4">
+          <div className="surface rounded-xl p-4">
             <div className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground mb-2">How it works</div>
             <ol className="text-xs text-caley-navy/80 space-y-1 list-decimal list-inside">
               <li>Press SPIN to randomly draw an active ticket.</li>
@@ -302,7 +347,7 @@ export function WinnerWheel({
           </DialogHeader>
           {pickedEntry && (
             <div className="space-y-4 text-center">
-              <div className="text-3xl font-black text-gradient-warm">{pickedEntry.ticketNumber}</div>
+              <div className="font-display text-3xl font-bold text-hotdog-red">{pickedEntry.ticketNumber}</div>
               <div className="text-sm">
                 <div className="font-semibold">{pickedParticipant?.fullName ?? "-"}</div>
                 <div className="text-muted-foreground">{pickedParticipant?.phone}</div>
@@ -321,7 +366,7 @@ export function WinnerWheel({
                   ))}
                 </div>
               </div>
-              <Button onClick={record} className="w-full gradient-brand text-white">Record Winner</Button>
+              <Button onClick={record} className="w-full">Record Winner</Button>
             </div>
           )}
         </DialogContent>

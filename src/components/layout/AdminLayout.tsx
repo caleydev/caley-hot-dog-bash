@@ -9,16 +9,12 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-admin relative">
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-32 -right-32 h-[28rem] w-[28rem] rounded-full bg-caley-sky/25 blur-3xl" />
-        <div className="absolute bottom-0 -left-32 h-[24rem] w-[24rem] rounded-full bg-caley-navy/10 blur-3xl" />
-      </div>
-      <header className="sticky top-0 z-20 bg-white/85 backdrop-blur-xl border-b border-caley-navy/10 shadow-[0_1px_0_0_color-mix(in_oklab,var(--caley-navy)_6%,transparent)]">
+      <header className="sticky top-0 z-20 bg-card border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 sm:px-4 py-2.5 sm:py-3">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <img src={logo} alt="Caley Insurance" className="h-7 sm:h-9 w-auto flex-shrink-0" />
             <div className="border-l border-border pl-2 sm:pl-3 min-w-0">
-              <div className="text-[15px] font-bold text-caley-navy leading-tight">
+              <div className="font-display text-[15px] font-bold text-caley-navy leading-tight tracking-tight">
                 Hot Dog Event Dashboard
               </div>
               <div className="hidden sm:flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">

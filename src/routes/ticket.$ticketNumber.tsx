@@ -7,6 +7,7 @@ import { AnimatedTicket } from "@/components/ui/AnimatedTicket";
 import { eventService } from "@/services/eventService";
 import type { Participant } from "@/types/event";
 import { bigBurst } from "@/lib/confetti";
+import { useLanguage } from "@/lib/i18n";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/ticket/$ticketNumber")({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/ticket/$ticketNumber")({
 
 function TicketPage() {
   const { ticketNumber } = Route.useParams();
+  const { t } = useLanguage();
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
@@ -38,14 +40,14 @@ function TicketPage() {
   }, [ticketNumber]);
 
   if (loading) {
-    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando...</div></PublicLayout>;
+    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">{t("common.loading")}</div></PublicLayout>;
   }
   if (!valid) {
     return (
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-4">
-          <h2 className="text-xl font-bold">No encontramos este ticket</h2>
-          <Button asChild><Link to="/"><Home className="h-4 w-4"/> Volver al inicio</Link></Button>
+          <h2 className="text-xl font-bold">{t("ticket.notFound.title")}</h2>
+          <Button asChild><Link to="/"><Home className="h-4 w-4"/> {t("common.backHome")}</Link></Button>
         </div>
       </PublicLayout>
     );
@@ -62,13 +64,13 @@ function TicketPage() {
                 "0 2px 18px rgba(0, 0, 0, 0.35), 0 0 24px rgba(125, 190, 255, 0.22)",
             }}
           >
-            Tu ticket está listo!
+            {t("ticket.title")}
           </h1>
           <p
             className="text-sm text-[rgba(235,247,255,0.82)]"
             style={{ textShadow: "0 1px 10px rgba(0, 0, 0, 0.24)" }}
           >
-            Guarda este número. Lo usaremos para anunciar los ganadores durante el evento.
+            {t("ticket.subtitle")}
           </p>
         </div>
 
@@ -78,20 +80,24 @@ function TicketPage() {
           <Button
             variant="outline"
             className="flex-1 h-12"
-            onClick={() => {
-              navigator.clipboard.writeText(ticketNumber);
-              toast.success("Número copiado");
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(ticketNumber);
+                toast.success(t("ticket.copied"));
+              } catch {
+                toast.error(t("ticket.copyError"));
+              }
             }}
           >
-            <Copy className="h-4 w-4" /> Copiar número
+            <Copy className="h-4 w-4" /> {t("ticket.copy")}
           </Button>
           <Button asChild className="flex-1 h-12 gradient-brand text-white">
-            <Link to="/"><Home className="h-4 w-4"/> Volver al inicio</Link>
+            <Link to="/"><Home className="h-4 w-4"/> {t("common.backHome")}</Link>
           </Button>
         </div>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          No purchase required. Insurance purchase does not increase chances of winning.
+          {t("ticket.disclaimer")}
         </p>
       </div>
     </PublicLayout>

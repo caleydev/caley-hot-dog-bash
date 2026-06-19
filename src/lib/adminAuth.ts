@@ -1,8 +1,9 @@
 import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
 
+// Demo access code — ONLY used in local/dev when Supabase is not configured.
+// At the live event, Supabase is configured, so this code is inactive.
 export const DEMO_ADMIN_CODE = "CALEY-HOTDOG-2026";
 const KEY = "caley_admin_session";
-const ADMIN_ROLES = new Set(["owner", "hq", "admin"]);
 
 function setLocalAdminSession(): void {
   if (typeof window === "undefined") return;
@@ -12,19 +13,6 @@ function setLocalAdminSession(): void {
 function clearLocalAdminSession(): void {
   if (typeof window === "undefined") return;
   sessionStorage.removeItem(KEY);
-}
-
-async function hasActiveAdminProfile(userId: string): Promise<boolean> {
-  if (!supabase) return false;
-
-  const { data, error } = await supabase
-    .from("admin_profiles")
-    .select("role, is_active")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (error || !data) return false;
-  return Boolean(data.is_active && ADMIN_ROLES.has(data.role));
 }
 
 export async function loginAdmin(code: string): Promise<boolean> {
@@ -53,12 +41,8 @@ export async function loginAdminWithPassword(
     return { ok: false, error: error?.message || "Unable to sign in." };
   }
 
-  const allowed = await hasActiveAdminProfile(data.session.user.id);
-  if (!allowed) {
-    await supabase.auth.signOut();
-    return { ok: false, error: "You do not have admin access." };
-  }
-
+  // Any account that can sign in to this project's Supabase Auth is an admin.
+  // Keep the project's user list limited to Caley staff.
   clearLocalAdminSession();
   return { ok: true };
 }
@@ -74,15 +58,7 @@ export async function isAdmin(): Promise<boolean> {
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session?.user) return false;
-
-  const allowed = await hasActiveAdminProfile(session.user.id);
-  if (!allowed) {
-    await supabase.auth.signOut();
-    return false;
-  }
-
-  return true;
+  return Boolean(session?.user);
 }
 
 export async function logoutAdmin(): Promise<void> {

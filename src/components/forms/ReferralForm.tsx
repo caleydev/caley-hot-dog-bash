@@ -11,6 +11,7 @@ import { formatPhone, isValidPhone, normalizePhone } from "@/utils/phone";
 import { eventService } from "@/services/eventService";
 import { toast } from "sonner";
 import { burst } from "@/lib/confetti";
+import { useLanguage } from "@/lib/i18n";
 import type { Participant } from "@/types/event";
 
 interface RefRow {
@@ -21,9 +22,11 @@ const empty: RefRow = { name: "", phone: "" };
 
 export function ReferralForm({ participant }: { participant: Participant }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [rows, setRows] = useState<RefRow[]>([empty, empty, empty]);
   const [confirm, setConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const completion = useMemo(
     () => rows.filter((r) => r.name.trim() && isValidPhone(r.phone)).length,
@@ -31,7 +34,9 @@ export function ReferralForm({ participant }: { participant: Participant }) {
   );
 
   const phonesValid = useMemo(() => {
-    const normalized = rows.map((r) => normalizePhone(r.phone));
+    const normalized = rows
+      .map((r) => normalizePhone(r.phone))
+      .filter((p) => p.length > 0);
     const uniques = new Set(normalized);
     if (uniques.size !== normalized.length) return false;
     if (participant.phone) {
@@ -40,18 +45,25 @@ export function ReferralForm({ participant }: { participant: Participant }) {
     return true;
   }, [rows, participant.phone]);
 
-  const canSubmit = completion === 3 && phonesValid && confirm && !submitting;
+  // Reason the form can't be submitted yet — surfaced inline once attempted.
+  const blockReason =
+    completion < 3
+      ? t("ref.block.incomplete")
+      : !phonesValid
+        ? t("ref.block.duplicate")
+        : !confirm
+          ? t("ref.block.confirm")
+          : undefined;
+
+  const canSubmit = !blockReason && !submitting;
 
   const updateRow = (i: number, patch: Partial<RefRow>) =>
     setRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (!canSubmit) {
-      if (!phonesValid)
-        toast.error("Los telefonos no pueden repetirse ni coincidir con el tuyo.");
-      return;
-    }
+    setSubmitted(true);
+    if (!canSubmit) return;
     setSubmitting(true);
     try {
       const { ticketNumber } = await eventService.createReferralsAndTicket(
@@ -62,7 +74,7 @@ export function ReferralForm({ participant }: { participant: Participant }) {
       navigate({ to: "/ticket/$ticketNumber", params: { ticketNumber } });
     } catch (e) {
       console.error(e);
-      toast.error("No pudimos generar tu ticket. Intenta de nuevo.");
+      toast.error(t("ref.toast.error"));
     } finally {
       setSubmitting(false);
     }
@@ -72,8 +84,8 @@ export function ReferralForm({ participant }: { participant: Participant }) {
     <form onSubmit={onSubmit} className="space-y-5">
       <div className="glass rounded-2xl p-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold">{completion}/3 referidos completados</span>
-          <span className="text-muted-foreground">Paso 2 de 2</span>
+          <span className="font-semibold">{t("ref.progress", { count: completion })}</span>
+          <span className="text-muted-foreground">{t("ref.step")}</span>
         </div>
         <Progress value={(completion / 3) * 100} className="mt-2 h-2" />
       </div>
@@ -91,7 +103,7 @@ export function ReferralForm({ participant }: { participant: Participant }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold">
                 <UserPlus className="h-4 w-4 text-caley-blue" />
-                Referido {i + 1}
+                {t("ref.row", { n: i + 1 })}
               </div>
               {done && (
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-success/20 text-success">
@@ -101,24 +113,24 @@ export function ReferralForm({ participant }: { participant: Participant }) {
             </div>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <div>
-                <Label htmlFor={`name-${i}`}>Nombre</Label>
+                <Label htmlFor={`name-${i}`}>{t("ref.name")}</Label>
                 <Input
                   id={`name-${i}`}
                   value={row.name}
                   onChange={(e) => updateRow(i, { name: e.target.value })}
                   className="h-11 mt-1"
-                  placeholder="Nombre completo"
+                  placeholder={t("ref.namePlaceholder")}
                 />
               </div>
               <div>
-                <Label htmlFor={`phone-${i}`}>Telefono</Label>
+                <Label htmlFor={`phone-${i}`}>{t("ref.phone")}</Label>
                 <Input
                   id={`phone-${i}`}
                   inputMode="tel"
                   value={row.phone}
                   onChange={(e) => updateRow(i, { phone: formatPhone(e.target.value) })}
                   className="h-11 mt-1"
-                  placeholder="(787) 555-1234"
+                  placeholder={t("ref.phonePlaceholder")}
                 />
               </div>
             </div>
@@ -129,27 +141,35 @@ export function ReferralForm({ participant }: { participant: Participant }) {
       <label className="flex items-start gap-3 glass rounded-2xl p-4 cursor-pointer">
         <Checkbox checked={confirm} onCheckedChange={(v) => setConfirm(v === true)} className="mt-0.5" />
         <span className="text-xs text-foreground/80">
-          Confirmo que conozco a estas personas y entiendo que Caley Insurance
-          podria contactarlas sobre opciones de seguro.
+          {t("ref.confirm")}
         </span>
       </label>
 
+      {submitted && blockReason && (
+        <p
+          role="alert"
+          className="text-center text-xs text-destructive"
+        >
+          {blockReason}
+        </p>
+      )}
+
       <Button
         type="submit"
-        disabled={!canSubmit}
-        className="h-12 w-full text-base gradient-warm text-white shadow-warm hover:opacity-95"
+        disabled={submitting}
+        className="h-12 w-full text-base gradient-warm text-white shadow-warm hover:opacity-95 disabled:opacity-50"
       >
         {submitting ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Generando ticket...
+            <Loader2 className="h-4 w-4 animate-spin" /> {t("ref.submitting")}
           </>
         ) : (
-          "Generar mi ticket"
+          t("ref.submit")
         )}
       </Button>
 
       <p className="text-center text-[11px] text-muted-foreground">
-        No purchase required. Insurance purchase does not increase chances of winning.
+        {t("ref.disclaimer")}
       </p>
     </form>
   );

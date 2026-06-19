@@ -4,6 +4,7 @@ import { Clock3, Sparkles } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { HeroTicket } from "@/components/ui/HeroTicket";
+import { useLanguage } from "@/lib/i18n";
 import sloganAsset from "@/assets/slogan-call-someone-special.png";
 
 export const Route = createFileRoute("/")({
@@ -11,69 +12,64 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { t } = useLanguage();
   return (
     <PublicLayout>
-      <div className="mx-auto max-w-xl space-y-5">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-2 lg:gap-14">
+        {/* Left — pitch + ticket */}
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
+          initial={{ y: 12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="text-center space-y-5 pt-2"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="space-y-6 text-center lg:text-left"
         >
           <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-caley-sky animate-pulse" />
-            Evento especial • Caley Insurance
+            {t("index.eyebrow")}
           </span>
 
-          <motion.div
-            initial={{ y: 22, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.15 }}
-            className="relative mx-auto w-full max-w-[520px]"
-          >
-            {/* Soft ambient halo behind the slogan — no box, just light */}
+          <div className="relative">
+            {/* Soft ambient halo behind the slogan — light, no box */}
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 -z-10"
               style={{
                 background:
-                  "radial-gradient(60% 55% at 50% 55%, color-mix(in oklab, var(--caley-blue) 35%, transparent) 0%, transparent 70%)",
-                filter: "blur(8px)",
+                  "radial-gradient(60% 70% at 50% 50%, color-mix(in oklab, var(--caley-blue) 38%, transparent) 0%, transparent 70%)",
+                filter: "blur(10px)",
               }}
             />
-            <h1 className="sr-only">Call Someone Special Today — Caley Insurance</h1>
+            <h1 className="sr-only">{t("index.slogan")}</h1>
             <img
               src={sloganAsset}
-              alt="Call Someone Special Today — slogan de Caley Insurance con letras iluminadas que sugieren CALEY"
-              className="slogan-glow relative mx-auto w-full max-w-[460px] select-none"
+              alt={t("index.sloganAlt")}
+              className="relative mx-auto w-full max-w-[460px] select-none lg:mx-0"
               draggable={false}
             />
-          </motion.div>
+          </div>
 
-          <p className="text-[15px] text-white/85 max-w-md mx-auto leading-relaxed pt-1">
-            Regístrate, dinos qué seguro te interesa y participa por premios
-            especiales del evento.
+          <p className="mx-auto max-w-md text-[15px] leading-relaxed text-white/85 lg:mx-0">
+            {t("index.intro")}
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+          <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <Clock3 className="h-3 w-3 text-mustard" /> Toma menos de 1 minuto
+              <Clock3 className="h-3 w-3 text-mustard" /> {t("index.badgeQuick")}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <Sparkles className="h-3 w-3 text-mustard" /> Premios del evento
+              <Sparkles className="h-3 w-3 text-mustard" /> {t("index.badgePrizes")}
             </span>
+          </div>
+
+          <div className="pt-2">
+            <HeroTicket />
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ y: 12, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="px-2 pt-2"
-        >
-          <HeroTicket />
-        </motion.div>
-
-        <LeadForm />
+        {/* Right — sign-up form */}
+        <div className="lg:pl-4">
+          <LeadForm />
+        </div>
       </div>
     </PublicLayout>
   );

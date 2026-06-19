@@ -1,6 +1,13 @@
-import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 
+/*
+ * Flat KPI card. One accent (navy/blue), hairline border, no resting shadow.
+ * Elevation appears only on hover. The value is the sole heavy element so the
+ * eye lands on the number, not the decoration.
+ *
+ * `tint` is kept for call-site compatibility but no longer paints the card —
+ * the only colored variant is `alert`, used when a metric needs attention.
+ */
 export function KpiCard({
   label,
   value,
@@ -10,40 +17,25 @@ export function KpiCard({
   label: string;
   value: string | number;
   icon: LucideIcon;
-  tint?: "blue" | "orange" | "red" | "yellow" | "green";
+  tint?: "blue" | "orange" | "red" | "yellow" | "green" | "alert";
 }) {
-  const tints: Record<string, string> = {
-    blue: "from-caley-blue/10 to-transparent text-caley-blue",
-    orange: "from-warm-orange/12 to-transparent text-warm-orange",
-    red: "from-hotdog-red/12 to-transparent text-hotdog-red",
-    yellow: "from-mustard/18 to-transparent text-caley-navy",
-    green: "from-success/12 to-transparent text-success",
-  };
-  const topBar: Record<string, string> = {
-    blue: "bg-caley-blue",
-    orange: "bg-warm-orange",
-    red: "bg-hotdog-red",
-    yellow: "bg-mustard",
-    green: "bg-success",
-  };
+  const isAlert = tint === "alert";
   return (
-    <motion.div
-      whileHover={{ y: -3 }}
-      className="relative overflow-hidden rounded-2xl glass-strong p-4"
-    >
-      <div className={`absolute left-0 right-0 top-0 h-1 ${topBar[tint]}`} />
-      <div className={`absolute inset-0 -z-0 bg-gradient-to-br ${tints[tint]}`} />
-      <div className="relative flex items-start justify-between pt-1">
-        <div>
-          <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-bold">
+    <div className="surface surface-hover rounded-xl p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="truncate text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             {label}
           </div>
-          <div className="mt-1.5 text-3xl font-black text-caley-navy tabular-nums">{value}</div>
+          <div className="font-display mt-1.5 text-3xl font-bold tabular-nums text-caley-navy">
+            {value}
+          </div>
         </div>
-        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-soft ring-1 ring-border">
-          <Icon className="h-4 w-4" />
-        </div>
+        <Icon
+          className={`h-4 w-4 flex-shrink-0 ${isAlert ? "text-hotdog-red" : "text-muted-foreground"}`}
+          strokeWidth={2}
+        />
       </div>
-    </motion.div>
+    </div>
   );
 }

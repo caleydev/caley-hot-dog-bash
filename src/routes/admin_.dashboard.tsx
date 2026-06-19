@@ -95,7 +95,7 @@ function AdminDashboard() {
     <AdminLayout>
       <Tabs defaultValue="overview" className="space-y-6">
         <div className="-mx-3 sm:mx-0 overflow-x-auto scrollbar-none">
-          <TabsList className="mx-3 sm:mx-0 w-max sm:w-full sm:justify-center flex-nowrap gap-1 bg-white/70 backdrop-blur-md border border-caley-navy/10 shadow-soft">
+          <TabsList className="mx-3 sm:mx-0 w-max sm:w-full sm:justify-center flex-nowrap gap-1 bg-muted border border-border">
             <TabsTrigger value="overview" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Overview</TabsTrigger>
             <TabsTrigger value="participants" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Participants</TabsTrigger>
             <TabsTrigger value="referrals" className="data-[state=active]:bg-caley-navy data-[state=active]:text-white">Referrals</TabsTrigger>
@@ -208,14 +208,14 @@ function SectionHeading({ title, subtitle }: { title: string; subtitle?: string 
 function InterestStatCard({ label, value, total }: { label: string; value: number; total: number }) {
   const pct = total > 0 ? Math.round((value / total) * 100) : 0;
   return (
-    <div className="glass-strong rounded-2xl p-3.5">
-      <div className="text-[11px] uppercase tracking-wider font-bold text-muted-foreground">{label}</div>
+    <div className="surface rounded-xl p-3.5">
+      <div className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground">{label}</div>
       <div className="mt-1 flex items-baseline justify-between">
-        <div className="text-2xl font-black text-caley-navy tabular-nums">{value}</div>
-        <div className="text-[11px] font-semibold text-caley-blue">{pct}%</div>
+        <div className="font-display text-2xl font-bold text-caley-navy tabular-nums">{value}</div>
+        <div className="text-[11px] font-medium text-muted-foreground tabular-nums">{pct}%</div>
       </div>
       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-caley-navy/8">
-        <div className="h-full rounded-full bg-gradient-to-r from-caley-navy to-caley-blue transition-all" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-caley-blue transition-all" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
@@ -233,7 +233,7 @@ function RecentList({
   emptyIcon?: typeof Users;
 }) {
   return (
-    <div className="glass-strong rounded-2xl p-4">
+    <div className="surface rounded-xl p-4">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="font-bold text-caley-navy">{title}</h3>
         <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Last {items.length || 5}</span>
@@ -282,7 +282,7 @@ function ParticipantsView({ participants, referrals }: { participants: Participa
 
   return (
     <div className="space-y-4">
-      <div className="glass rounded-2xl p-3 flex flex-wrap items-center gap-2">
+      <div className="surface rounded-xl p-3 flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search name, phone or email" className="pl-9" />
@@ -299,13 +299,13 @@ function ParticipantsView({ participants, referrals }: { participants: Participa
       </div>
 
       {filtered.length === 0 ? (
-        <div className="glass rounded-2xl p-10 text-center text-muted-foreground">No participants match.</div>
+        <div className="surface rounded-xl p-10 text-center text-muted-foreground">No participants match.</div>
       ) : (
         <>
           {/* Mobile cards */}
           <div className="grid gap-3 sm:hidden">
             {filtered.map((p) => (
-              <button key={p.id} onClick={() => setSelected(p)} className="glass rounded-2xl p-4 text-left">
+              <button key={p.id} onClick={() => setSelected(p)} className="surface surface-hover rounded-xl p-4 text-left">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-semibold">{p.fullName}</div>
@@ -321,21 +321,22 @@ function ParticipantsView({ participants, referrals }: { participants: Participa
           </div>
 
           {/* Desktop table */}
-          <div className="hidden sm:block glass rounded-2xl overflow-hidden">
+          <div className="hidden sm:block surface rounded-xl overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-white/50 text-left">
+              <caption className="sr-only">Registered participants with contact details, interests, and ticket numbers</caption>
+              <thead className="bg-muted text-left">
                 <tr>
-                  <th className="p-3 font-semibold">Name</th>
-                  <th className="p-3 font-semibold">Phone</th>
-                  <th className="p-3 font-semibold">Email</th>
-                  <th className="p-3 font-semibold">Interests</th>
-                  <th className="p-3 font-semibold">Ticket</th>
-                  <th className="p-3 font-semibold">Created</th>
+                  <th scope="col" className="p-3 font-semibold">Name</th>
+                  <th scope="col" className="p-3 font-semibold">Phone</th>
+                  <th scope="col" className="p-3 font-semibold">Email</th>
+                  <th scope="col" className="p-3 font-semibold">Interests</th>
+                  <th scope="col" className="p-3 font-semibold">Ticket</th>
+                  <th scope="col" className="p-3 font-semibold">Created</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((p) => (
-                  <tr key={p.id} onClick={() => setSelected(p)} className="border-t border-border/50 cursor-pointer hover:bg-white/40">
+                  <tr key={p.id} onClick={() => setSelected(p)} className="border-t border-border/50 cursor-pointer hover:bg-muted/60">
                     <td className="p-3 font-medium">{p.fullName}</td>
                     <td className="p-3">{formatPhone(p.phone)}</td>
                     <td className="p-3">{p.email}</td>
@@ -402,12 +403,12 @@ function ReferralsView({ referrals, participants }: { referrals: Referral[]; par
   }, [referrals, query]);
 
   if (referrals.length === 0) {
-    return <div className="glass rounded-2xl p-10 text-center text-muted-foreground">No referrals yet.</div>;
+    return <div className="surface rounded-xl p-10 text-center text-muted-foreground">No referrals yet.</div>;
   }
 
   return (
     <div className="space-y-4">
-      <div className="glass rounded-2xl p-3">
+      <div className="surface rounded-xl p-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search referrals" className="pl-9" />
@@ -417,7 +418,7 @@ function ReferralsView({ referrals, participants }: { referrals: Referral[]; par
         {filtered.map((r) => {
           const ref = participants.find((p) => p.id === r.participantId);
           return (
-            <div key={r.id} className="glass rounded-2xl p-4">
+            <div key={r.id} className="surface rounded-xl p-4">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="font-semibold">{r.referralName}</div>
@@ -430,16 +431,17 @@ function ReferralsView({ referrals, participants }: { referrals: Referral[]; par
           );
         })}
       </div>
-      <div className="hidden sm:block glass rounded-2xl overflow-hidden">
+      <div className="hidden sm:block surface rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-white/50 text-left">
+          <caption className="sr-only">Referred contacts linked to the participant who referred them</caption>
+          <thead className="bg-muted text-left">
             <tr>
-              <th className="p-3 font-semibold">Referral</th>
-              <th className="p-3 font-semibold">Phone</th>
-              <th className="p-3 font-semibold">Referred by</th>
-              <th className="p-3 font-semibold">Referrer phone</th>
-              <th className="p-3 font-semibold">Ticket</th>
-              <th className="p-3 font-semibold">Created</th>
+              <th scope="col" className="p-3 font-semibold">Referral</th>
+              <th scope="col" className="p-3 font-semibold">Phone</th>
+              <th scope="col" className="p-3 font-semibold">Referred by</th>
+              <th scope="col" className="p-3 font-semibold">Referrer phone</th>
+              <th scope="col" className="p-3 font-semibold">Ticket</th>
+              <th scope="col" className="p-3 font-semibold">Created</th>
             </tr>
           </thead>
           <tbody>
@@ -466,7 +468,7 @@ function ReferralsView({ referrals, participants }: { referrals: Referral[]; par
 function WinnersView({ winners }: { winners: Winner[] }) {
   if (winners.length === 0) {
     return (
-      <div className="glass-strong rounded-2xl p-10 text-center">
+      <div className="surface rounded-xl p-10 text-center">
         <Trophy className="mx-auto h-8 w-8 text-mustard mb-2" />
         <div className="font-semibold text-caley-navy">No winners drawn yet</div>
         <p className="text-sm text-muted-foreground mt-1">Head to the Giveaway Wheel to draw your first winner.</p>
@@ -478,7 +480,7 @@ function WinnersView({ winners }: { winners: Winner[] }) {
       {/* Mobile cards */}
       <div className="grid gap-3 sm:hidden">
         {winners.map((w) => (
-          <div key={w.id} className="glass-strong rounded-2xl p-4">
+          <div key={w.id} className="surface rounded-xl p-4">
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Draw #{w.drawOrder}</div>
@@ -495,16 +497,17 @@ function WinnersView({ winners }: { winners: Winner[] }) {
         ))}
       </div>
       {/* Desktop table */}
-      <div className="hidden sm:block glass-strong rounded-2xl overflow-hidden">
+      <div className="hidden sm:block surface rounded-xl overflow-hidden">
       <table className="w-full text-sm">
-        <thead className="bg-white/50 text-left">
+        <caption className="sr-only">Winners drawn from the giveaway, in draw order, with prize and timestamp</caption>
+        <thead className="bg-muted text-left">
           <tr>
-            <th className="p-3 font-semibold">#</th>
-            <th className="p-3 font-semibold">Ticket</th>
-            <th className="p-3 font-semibold">Winner</th>
-            <th className="p-3 font-semibold">Phone</th>
-            <th className="p-3 font-semibold">Prize</th>
-            <th className="p-3 font-semibold">Drawn</th>
+            <th scope="col" className="p-3 font-semibold">#</th>
+            <th scope="col" className="p-3 font-semibold">Ticket</th>
+            <th scope="col" className="p-3 font-semibold">Winner</th>
+            <th scope="col" className="p-3 font-semibold">Phone</th>
+            <th scope="col" className="p-3 font-semibold">Prize</th>
+            <th scope="col" className="p-3 font-semibold">Drawn</th>
           </tr>
         </thead>
         <tbody>
@@ -609,7 +612,7 @@ function ExportView({
       <SectionHeading title="Export Center" subtitle="Download event data as CSV for follow-up and reporting" />
       <div className="grid gap-3 sm:grid-cols-2">
         {buttons.map((b) => (
-          <div key={b.label} className="glass-strong rounded-2xl p-4 flex flex-col gap-3">
+          <div key={b.label} className="surface rounded-xl p-4 flex flex-col gap-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="font-bold text-caley-navy">{b.label}</div>

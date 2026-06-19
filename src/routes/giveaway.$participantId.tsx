@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ReferralForm } from "@/components/forms/ReferralForm";
 import { eventService } from "@/services/eventService";
 import type { Participant } from "@/types/event";
+import { useLanguage } from "@/lib/i18n";
 
 export const Route = createFileRoute("/giveaway/$participantId")({
   component: GiveawayPage,
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/giveaway/$participantId")({
 
 function GiveawayPage() {
   const { participantId } = Route.useParams();
+  const { t } = useLanguage();
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,14 +31,14 @@ function GiveawayPage() {
   }, [participantId]);
 
   if (loading) {
-    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">Cargando...</div></PublicLayout>;
+    return <PublicLayout><div className="mx-auto max-w-md glass rounded-3xl p-8 text-center">{t("common.loading")}</div></PublicLayout>;
   }
   if (!participant) {
     return (
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-4">
-          <h2 className="text-xl font-bold">Enlace invalido</h2>
-          <Button asChild><Link to="/">Volver al inicio</Link></Button>
+          <h2 className="text-xl font-bold">{t("giveaway.invalid.title")}</h2>
+          <Button asChild><Link to="/">{t("common.backHome")}</Link></Button>
         </div>
       </PublicLayout>
     );
@@ -46,10 +48,10 @@ function GiveawayPage() {
     return (
       <PublicLayout>
         <div className="mx-auto max-w-md glass rounded-3xl p-8 text-center space-y-4">
-          <h2 className="text-xl font-bold">Ya tienes un ticket</h2>
-          <p className="text-muted-foreground">Tu numero: <strong>{participant.ticketNumber}</strong></p>
+          <h2 className="text-xl font-bold">{t("giveaway.hasTicket.title")}</h2>
+          <p className="text-muted-foreground">{t("giveaway.hasTicket.number")} <strong>{participant.ticketNumber}</strong></p>
           <Button asChild className="gradient-brand text-white">
-            <Link to="/ticket/$ticketNumber" params={{ ticketNumber: participant.ticketNumber }}>Ver mi ticket</Link>
+            <Link to="/ticket/$ticketNumber" params={{ ticketNumber: participant.ticketNumber }}>{t("giveaway.hasTicket.view")}</Link>
           </Button>
         </div>
       </PublicLayout>
@@ -67,13 +69,13 @@ function GiveawayPage() {
                 "0 2px 18px rgba(0, 0, 0, 0.35), 0 0 24px rgba(125, 190, 255, 0.22)",
             }}
           >
-            Entra al Giveaway
+            {t("giveaway.title")}
           </h1>
           <p
             className="text-sm text-[rgba(235,247,255,0.82)]"
             style={{ textShadow: "0 1px 10px rgba(0, 0, 0, 0.24)" }}
           >
-            Agrega 3 personas que podrían necesitar seguro y recibe tu número de ticket.
+            {t("giveaway.subtitle")}
           </p>
         </div>
         <ReferralForm participant={participant} />
