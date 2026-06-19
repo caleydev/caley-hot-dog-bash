@@ -5,7 +5,7 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { HeroTicket } from "@/components/ui/HeroTicket";
 import { useLanguage } from "@/lib/i18n";
-import sloganAsset from "@/assets/slogan-call-someone-special.png";
+import sloganAsset from "@/assets/slogan-call-someone-special-neon.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -23,10 +23,12 @@ function Index() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="space-y-6 text-center lg:text-left"
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-caley-sky animate-pulse" />
-            {t("index.eyebrow")}
-          </span>
+          <div className="flex items-center justify-center gap-3 lg:justify-start">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-warm-orange" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/75">
+              {t("index.eyebrow")}
+            </span>
+          </div>
 
           <div className="relative">
             {/* Soft ambient halo behind the slogan — light, no box */}

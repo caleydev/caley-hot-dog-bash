@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Ticket } from "lucide-react";
 import logo from "@/assets/caley-logo.webp";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
+import { FloatingHotdogs } from "@/components/ui/FloatingHotdogs";
 import { useLanguage } from "@/lib/i18n";
 
 export function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -12,6 +13,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       {/* Continuous hero atmosphere — slow drifting glows + top-fading grid */}
       <div aria-hidden className="hero-atmos" />
       <div aria-hidden className="hero-grid-fade" />
+      <FloatingHotdogs />
 
       <header className="sticky top-0 z-20 px-4 pt-3">
         <motion.div
@@ -23,8 +25,8 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
             <img src={logo} alt="Caley Insurance" className="h-7 w-auto brightness-0 invert" />
           </Link>
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full gradient-warm px-2.5 py-1 text-[11px] font-semibold text-white shadow-[0_4px_14px_-6px_var(--hotdog-red)]">
-              <Ticket className="h-3 w-3" />
+            <span className="hidden sm:inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wide text-white/90 backdrop-blur-md">
+              <Ticket className="h-3 w-3 text-warm-orange" />
               {t("header.eventBadge")}
             </span>
             <LanguageToggle />
