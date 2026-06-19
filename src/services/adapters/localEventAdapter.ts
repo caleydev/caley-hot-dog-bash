@@ -1,5 +1,6 @@
 import type {
   GiveawayEntry,
+  GiveawayStatus,
   Participant,
   Referral,
   Winner,
@@ -184,6 +185,23 @@ export const localEventAdapter = {
 
   async getWinners(): Promise<Winner[]> {
     return readJSON<Winner>(K.winners).sort((a, b) => a.drawOrder - b.drawOrder);
+  },
+
+  async getGiveawayStatus(ticketNumber: string): Promise<GiveawayStatus> {
+    const winners = readJSON<Winner>(K.winners).sort(
+      (a, b) => a.drawOrder - b.drawOrder,
+    );
+    const mine = winners.find((w) => w.ticketNumber === ticketNumber);
+    const latest = winners[winners.length - 1];
+    return {
+      youWon: Boolean(mine),
+      yourPrize: mine?.prizeLabel || undefined,
+      latestTicket: latest?.ticketNumber,
+      latestName: latest ? latest.winnerName.split(" ")[0] : undefined,
+      latestPrize: latest?.prizeLabel || undefined,
+      latestAt: latest?.drawnAt,
+      totalWinners: winners.length,
+    };
   },
 
   async seedDemo(): Promise<void> {

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Copy, Home } from "lucide-react";
+import { Copy, Home, Trophy } from "lucide-react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { AnimatedTicket } from "@/components/ui/AnimatedTicket";
 import { eventService } from "@/services/eventService";
-import type { Participant } from "@/types/event";
+import type { GiveawayStatus, Participant } from "@/types/event";
 import { bigBurst } from "@/lib/confetti";
 import { useLanguage } from "@/lib/i18n";
 import { toast } from "sonner";
@@ -20,6 +20,8 @@ function TicketPage() {
   const [participant, setParticipant] = useState<Participant | null>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
+  const [status, setStatus] = useState<GiveawayStatus | null>(null);
+  const celebrated = useRef(false);
 
   useEffect(() => {
     eventService.getTicketByNumber(ticketNumber)
@@ -37,6 +39,31 @@ function TicketPage() {
       .finally(() => {
         setLoading(false);
       });
+  }, [ticketNumber]);
+
+  // Live giveaway results: poll so the participant's phone updates itself when
+  // a winner is drawn — celebrating once if this ticket is the one selected.
+  useEffect(() => {
+    let active = true;
+    const poll = async () => {
+      try {
+        const next = await eventService.getGiveawayStatus(ticketNumber);
+        if (!active) return;
+        setStatus(next);
+        if (next.youWon && !celebrated.current) {
+          celebrated.current = true;
+          bigBurst();
+        }
+      } catch {
+        // Keep the last known status on transient errors.
+      }
+    };
+    poll();
+    const interval = setInterval(poll, 5000);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [ticketNumber]);
 
   if (loading) {
@@ -75,6 +102,43 @@ function TicketPage() {
         </div>
 
         <AnimatedTicket ticketNumber={ticketNumber} name={participant?.fullName} />
+
+        {status?.youWon ? (
+          <div className="glass rounded-2xl p-6 text-center space-y-2 ring-2 ring-success/45">
+            <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-success">
+              <Trophy className="h-7 w-7" />
+            </span>
+            <div className="text-2xl font-black text-success">{t("ticket.status.youWon")}</div>
+            {status.yourPrize && (
+              <div className="text-base font-bold text-caley-navy">
+                {t("ticket.status.youWonPrize", { prize: status.yourPrize })}
+              </div>
+            )}
+            <p className="text-sm text-muted-foreground">{t("ticket.status.youWonBody")}</p>
+          </div>
+        ) : status && status.totalWinners > 0 ? (
+          <div className="glass rounded-2xl p-4 text-center space-y-1">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-caley-blue">
+              {t("ticket.status.heading")}
+            </div>
+            <div className="text-lg font-extrabold tabular-nums text-caley-navy">
+              {t("ticket.status.latest", { ticket: status.latestTicket ?? "" })}
+            </div>
+            {status.latestName && (
+              <p className="text-sm text-muted-foreground">
+                {t("ticket.status.latestBy", { name: status.latestName })}
+              </p>
+            )}
+            <p className="pt-1 text-xs text-muted-foreground">{t("ticket.status.notYou")}</p>
+          </div>
+        ) : (
+          <div className="glass rounded-2xl p-4">
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span className="h-2 w-2 rounded-full bg-caley-blue animate-pulse" />
+              {t("ticket.status.waiting")}
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row gap-2">
           <Button

@@ -292,7 +292,7 @@ begin
 
   select * into v_part from public.event_participants where id = v_entry.participant_id;
 
-  select coalesce(max(draw_order), 0) + 1 into v_order from public.giveaway_winners;
+  select coalesce(max(gw.draw_order), 0) + 1 into v_order from public.giveaway_winners gw;
 
   v_id := gen_random_uuid();
   insert into public.giveaway_winners
@@ -307,6 +307,39 @@ begin
   select v_id, p_entry_id, v_entry.participant_id, v_entry.ticket_number,
          coalesce(v_part.full_name, ''), coalesce(v_part.phone, ''), p_prize_label, v_order, v_now;
 end;
+$$;
+
+-- Public giveaway status for a single ticket. Lets a participant's phone poll
+-- "did I win, and which ticket was drawn most recently?" without exposing the
+-- full winners table. Only public-safe fields (ticket number, first name).
+create or replace function public.get_giveaway_status(p_ticket_number text)
+returns table (
+  you_won boolean,
+  your_prize text,
+  latest_ticket text,
+  latest_name text,
+  latest_prize text,
+  latest_at timestamptz,
+  total_winners int
+)
+language sql security definer set search_path = public as $$
+  select
+    exists (
+      select 1 from public.giveaway_winners w
+      where w.ticket_number = p_ticket_number
+    ) as you_won,
+    (select w.prize_label from public.giveaway_winners w
+       where w.ticket_number = p_ticket_number
+       order by w.draw_order desc limit 1) as your_prize,
+    (select w.ticket_number from public.giveaway_winners w
+       order by w.draw_order desc limit 1) as latest_ticket,
+    (select split_part(w.winner_name, ' ', 1) from public.giveaway_winners w
+       order by w.draw_order desc limit 1) as latest_name,
+    (select w.prize_label from public.giveaway_winners w
+       order by w.draw_order desc limit 1) as latest_prize,
+    (select w.drawn_at from public.giveaway_winners w
+       order by w.draw_order desc limit 1) as latest_at,
+    (select count(*)::int from public.giveaway_winners) as total_winners;
 $$;
 
 -- ----------------------------------------------------------------------------
@@ -336,6 +369,7 @@ grant execute on function public.submit_participant(text, text, text, text[], bo
 grant execute on function public.get_participant_flow_state(uuid, text) to anon, authenticated;
 grant execute on function public.submit_referrals_and_create_ticket(uuid, text, jsonb) to anon, authenticated;
 grant execute on function public.get_public_ticket(text, text) to anon, authenticated;
+grant execute on function public.get_giveaway_status(text) to anon, authenticated;
 grant execute on function public.record_giveaway_winner(uuid, text) to authenticated;
 
 -- Done. Now add one admin user in Authentication → Users.

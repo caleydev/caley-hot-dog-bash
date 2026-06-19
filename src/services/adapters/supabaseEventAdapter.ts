@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { localEventAdapter } from "./localEventAdapter";
 import type {
   GiveawayEntry,
+  GiveawayStatus,
   Interest,
   Participant,
   Referral,
@@ -87,6 +88,16 @@ type GiveawayWinnerRow = {
   draw_order: number;
   drawn_by: string | null;
   drawn_at: string;
+};
+
+type GiveawayStatusRow = {
+  you_won: boolean;
+  your_prize: string | null;
+  latest_ticket: string | null;
+  latest_name: string | null;
+  latest_prize: string | null;
+  latest_at: string | null;
+  total_winners: number | null;
 };
 
 type RecordGiveawayWinnerRow = {
@@ -283,6 +294,37 @@ export const supabaseEventAdapter = {
         publicTicketToken: row.public_ticket_token ?? storedToken ?? undefined,
         createdAt: row.created_at,
       },
+    };
+  },
+
+  async getGiveawayStatus(ticketNumber: string): Promise<GiveawayStatus> {
+    if (!supabase) {
+      throw new Error("Supabase is not configured.");
+    }
+
+    const { data, error } = await supabase.rpc("get_giveaway_status", {
+      p_ticket_number: ticketNumber,
+    });
+
+    if (error) {
+      throw new Error(error.message || "Unable to load giveaway status.");
+    }
+
+    const row = (Array.isArray(data) ? data[0] : data) as
+      | GiveawayStatusRow
+      | null;
+    if (!row) {
+      return { youWon: false, totalWinners: 0 };
+    }
+
+    return {
+      youWon: Boolean(row.you_won),
+      yourPrize: row.your_prize ?? undefined,
+      latestTicket: row.latest_ticket ?? undefined,
+      latestName: row.latest_name ?? undefined,
+      latestPrize: row.latest_prize ?? undefined,
+      latestAt: row.latest_at ?? undefined,
+      totalWinners: row.total_winners ?? 0,
     };
   },
 

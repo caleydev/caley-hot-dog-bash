@@ -46,6 +46,18 @@ export interface Winner {
   drawnBy?: string;
 }
 
+export interface GiveawayStatus {
+  /** Has this ticket been drawn as a winner? */
+  youWon: boolean;
+  yourPrize?: string;
+  /** Most recently drawn winning ticket (for "Ticket X was selected"). */
+  latestTicket?: string;
+  latestName?: string;
+  latestPrize?: string;
+  latestAt?: string;
+  totalWinners: number;
+}
+
 export interface TicketLookup {
   ticketNumber: string;
   participant: Participant;

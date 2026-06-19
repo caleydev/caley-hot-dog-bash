@@ -127,6 +127,19 @@ const es: Messages = {
   "ticket.disclaimer":
     "No purchase required. Insurance purchase does not increase chances of winning.",
 
+  // Live giveaway status (shown on the ticket screen)
+  "ticket.status.heading": "Resultados en vivo",
+  "ticket.status.waiting":
+    "El sorteo aún no comienza. Mantén esta pantalla abierta para ver los resultados en vivo.",
+  "ticket.status.youWon": "¡Ganaste!",
+  "ticket.status.youWonPrize": "Tu premio: {prize}",
+  "ticket.status.youWonBody":
+    "Muestra esta pantalla a un miembro del equipo Caley para reclamarlo.",
+  "ticket.status.latest": "Último número sorteado: {ticket}",
+  "ticket.status.latestBy": "Ganador: {name}",
+  "ticket.status.notYou":
+    "No fue tu número esta vez. ¡Sigue atento, puede haber más sorteos!",
+
   // Animated ticket
   "animTicket.brand": "Caley Hot Dog",
   "animTicket.giveaway": "Giveaway",
@@ -249,6 +262,19 @@ const en: Messages = {
   "ticket.copyError": "We couldn't copy the number.",
   "ticket.disclaimer":
     "No purchase required. Insurance purchase does not increase chances of winning.",
+
+  // Live giveaway status (shown on the ticket screen)
+  "ticket.status.heading": "Live results",
+  "ticket.status.waiting":
+    "The draw hasn't started yet. Keep this screen open to see live results.",
+  "ticket.status.youWon": "You won!",
+  "ticket.status.youWonPrize": "Your prize: {prize}",
+  "ticket.status.youWonBody":
+    "Show this screen to a Caley team member to claim it.",
+  "ticket.status.latest": "Last number drawn: {ticket}",
+  "ticket.status.latestBy": "Winner: {name}",
+  "ticket.status.notYou":
+    "That wasn't your number this time. Stay tuned — there may be more draws!",
 
   // Animated ticket
   "animTicket.brand": "Caley Hot Dog",
