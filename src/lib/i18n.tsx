@@ -32,6 +32,10 @@ const es: Messages = {
   "index.badgeQuick": "Toma menos de 1 minuto",
   "index.badgePrizes": "Premios del evento",
 
+  // Footer
+  "footer.rights": "Todos los derechos reservados.",
+  "footer.tagline": "Hecho con cariño para el evento Caley Hot Dog.",
+
   // Interests
   "interest.Carro": "Carro",
   "interest.Casa": "Casa",
@@ -154,6 +158,10 @@ const en: Messages = {
     "Sign up, tell us which coverage you're interested in, and enter to win special event prizes.",
   "index.badgeQuick": "Takes less than 1 minute",
   "index.badgePrizes": "Event prizes",
+
+  // Footer
+  "footer.rights": "All rights reserved.",
+  "footer.tagline": "Made with care for the Caley Hot Dog Event.",
 
   // Interests
   "interest.Carro": "Car",
